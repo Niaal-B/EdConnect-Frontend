@@ -1,0 +1,181 @@
+
+export const studentUsers = [
+  {
+    id: 1001,
+    name: 'Emma Johnson',
+    email: 'emma.johnson@example.com',
+    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200&h=200&auto=format&fit=crop',
+    status: 'active',
+    registrationDate: '2023-01-15',
+    country: 'USA',
+    interests: ['Mathematics', 'Computer Science', 'Physics'],
+    connectedMentors: 3
+  },
+  {
+    id: 1002,
+    name: 'John Smith',
+    email: 'john.smith@example.com',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&h=200&auto=format&fit=crop',
+    status: 'active',
+    registrationDate: '2023-02-20',
+    country: 'UK',
+    interests: ['Business', 'Marketing', 'Economics'],
+    connectedMentors: 2
+  },
+  {
+    id: 1003,
+    name: 'Michael Brown',
+    email: 'michael.brown@example.com',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&h=200&auto=format&fit=crop',
+    status: 'inactive',
+    registrationDate: '2023-03-10',
+    country: 'Australia',
+    interests: ['Literature', 'History', 'Philosophy'],
+    connectedMentors: 0
+  },
+  {
+    id: 1004,
+    name: 'Sophie Wilson',
+    email: 'sophie.wilson@example.com',
+    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&h=200&auto=format&fit=crop',
+    status: 'active',
+    registrationDate: '2023-04-05',
+    country: 'Canada',
+    interests: ['Biology', 'Chemistry', 'Environmental Science'],
+    connectedMentors: 1
+  },
+  {
+    id: 1005,
+    name: 'Ryan Taylor',
+    email: 'ryan.taylor@example.com',
+    avatar: 'https://images.unsplash.com/photo-1504257432389-52343af06ae3?q=80&w=200&h=200&auto=format&fit=crop',
+    status: 'active',
+    registrationDate: '2023-02-28',
+    country: 'USA',
+    interests: ['Art', 'Design', 'Photography'],
+    connectedMentors: 2
+  },
+  {
+    id: 1006,
+    name: 'Priya Sharma',
+    email: 'priya.sharma@example.com',
+    avatar: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?q=80&w=200&h=200&auto=format&fit=crop',
+    status: 'active',
+    registrationDate: '2023-03-15',
+    country: 'India',
+    interests: ['Computer Science', 'AI', 'Machine Learning'],
+    connectedMentors: 4
+  },
+  {
+    id: 1007,
+    name: 'David Miller',
+    email: 'david.miller@example.com',
+    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=200&h=200&auto=format&fit=crop',
+    status: 'inactive',
+    registrationDate: '2023-01-10',
+    country: 'Germany',
+    interests: ['Music', 'Audio Engineering', 'Composition'],
+    connectedMentors: 0
+  },
+];
+
+export const mentorUsers = [
+  {
+    id: 2001,
+    name: 'Dr. Alex Chen',
+    email: 'alex.chen@example.com',
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200&h=200&auto=format&fit=crop',
+    status: 'active',
+    verified: true,
+    registrationDate: '2022-12-10',
+    country: 'USA',
+    expertise: ['Machine Learning', 'Data Science', 'Python'],
+    rating: 4.9,
+    reviewCount: 45,
+    sessionsCompleted: 68
+  },
+  {
+    id: 2002,
+    name: 'Prof. Sarah Williams',
+    email: 'sarah.williams@example.com',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&h=200&auto=format&fit=crop',
+    status: 'active',
+    verified: true,
+    registrationDate: '2022-11-05',
+    country: 'UK',
+    expertise: ['Mathematics', 'Statistics', 'Research Methods'],
+    rating: 4.8,
+    reviewCount: 36,
+    sessionsCompleted: 42
+  },
+  {
+    id: 2003,
+    name: 'James Anderson',
+    email: 'james.anderson@example.com',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&h=200&auto=format&fit=crop',
+    status: 'inactive',
+    verified: false,
+    registrationDate: '2023-01-20',
+    country: 'Australia',
+    expertise: ['Business Strategy', 'Marketing', 'Entrepreneurship'],
+    rating: 0,
+    reviewCount: 0,
+    sessionsCompleted: 0
+  },
+  {
+    id: 2004,
+    name: 'Dr. Maria Garcia',
+    email: 'maria.garcia@example.com',
+    avatar: 'https://images.unsplash.com/photo-1601412436009-d964bd02edbc?q=80&w=200&h=200&auto=format&fit=crop',
+    status: 'active',
+    verified: true,
+    registrationDate: '2022-10-15',
+    country: 'Spain',
+    expertise: ['Biology', 'Genetics', 'Molecular Science'],
+    rating: 4.7,
+    reviewCount: 28,
+    sessionsCompleted: 35
+  },
+  {
+    id: 2005,
+    name: 'Robert Nolan',
+    email: 'robert.nolan@example.com',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&h=200&auto=format&fit=crop',
+    status: 'active',
+    verified: false,
+    registrationDate: '2023-02-01',
+    country: 'Canada',
+    expertise: ['Software Engineering', 'Web Development', 'Mobile Apps'],
+    rating: 0,
+    reviewCount: 0,
+    sessionsCompleted: 0
+  },
+  {
+    id: 2006,
+    name: 'Dr. Olivia Thompson',
+    email: 'olivia.thompson@example.com',
+    avatar: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=200&h=200&auto=format&fit=crop',
+    status: 'active',
+    verified: true,
+    registrationDate: '2022-09-10',
+    country: 'USA',
+    expertise: ['Psychology', 'Mental Health', 'Cognitive Science'],
+    rating: 4.9,
+    reviewCount: 52,
+    sessionsCompleted: 74
+  },
+  {
+    id: 2007,
+    name: 'Kai Yamamoto',
+    email: 'kai.yamamoto@example.com',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&h=200&auto=format&fit=crop',
+    status: 'active',
+    verified: true,
+    registrationDate: '2022-11-20',
+    country: 'Japan',
+    expertise: ['Physics', 'Mathematics', 'Engineering'],
+    rating: 4.6,
+    reviewCount: 19,
+    sessionsCompleted: 26
+  }
+];
