@@ -40,6 +40,7 @@ interface Message {
 
 
 const BACKEND_WEBSOCKET_HOST = import.meta.env.VITE_BACKEND_WEBSOCKET_HOST;
+const new_one = import.meta.env.VITE_BACKEND_WEBSOCKET_HOST;
 
 
 const MentorMessages = () => {
@@ -150,6 +151,7 @@ const MentorMessages = () => {
     ws.current.onclose = (event) => {
       console.log('WebSocket disconnecteds:', event);
       console.log(BACKEND_WEBSOCKET_HOST)
+      console.log(new_one,"this is new one")
       setIsConnected(false);
       // Attempt to reconnect only if it was an unclean close (e.g., server restart, network issue)
       if (!event.wasClean) {
