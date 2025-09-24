@@ -36,8 +36,11 @@ interface Message {
   file_type?: string;
 }
 
+const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
 
-const BACKEND_WEBSOCKET_HOST = 'localhost';
+
+const BACKEND_WEBSOCKET_HOST = import.meta.env.VITE_BACKEND_WEBSOCKET_HOST;
+
 
 
 interface MentorSidebarProps {
@@ -169,8 +172,7 @@ const Messages = () => {
 
     loadChatHistory();
 
-    const WEBSOCKET_URL = `ws://${BACKEND_WEBSOCKET_HOST}/ws/chat/${selectedChatRoomId}/`;
-    console.log(`Attempting to connect to WebSocket at: ${WEBSOCKET_URL}`);
+    const WEBSOCKET_URL = `${wsProtocol}//${BACKEND_WEBSOCKET_HOST}/ws/chat/${selectedChatRoomId}/`;
 
     ws.current = new WebSocket(WEBSOCKET_URL);
 

@@ -43,7 +43,6 @@ const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
 
 
 const BACKEND_WEBSOCKET_HOST = import.meta.env.VITE_BACKEND_WEBSOCKET_HOST;
-const new_one = import.meta.env.VITE_BACKEND_WEBSOCKET_HOST;
 
 
 const MentorMessages = () => {
