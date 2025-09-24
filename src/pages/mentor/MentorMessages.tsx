@@ -39,7 +39,7 @@ interface Message {
 }
 
 
-const BACKEND_WEBSOCKET_HOST = 'localhost'; 
+const BACKEND_WEBSOCKET_HOST = 'ed-connect-frontend.vercel.app'; 
 
 
 // --- Main MentorMessages Component ---
