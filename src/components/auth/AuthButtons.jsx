@@ -1,8 +1,8 @@
 import React from 'react';
 
 const GoogleAuthButtons = () => {
-    const GOOGLE_CLIENT_ID = "282993882148-iok4nnp3633isofiuhlsinflfmav87pg.apps.googleusercontent.com";
-    const GOOGLE_REDIRECT_URI = 'http://localhost/api/auth/google/callback/';
+    const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const GOOGLE_REDIRECT_URI = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
     const GOOGLE_SCOPES = [
         'https://www.googleapis.com/auth/userinfo.profile',
         'https://www.googleapis.com/auth/userinfo.email',
