@@ -39,6 +39,9 @@ interface Message {
 }
 
 
+const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+
+
 const BACKEND_WEBSOCKET_HOST = import.meta.env.VITE_BACKEND_WEBSOCKET_HOST;
 const new_one = import.meta.env.VITE_BACKEND_WEBSOCKET_HOST;
 
@@ -119,7 +122,7 @@ const MentorMessages = () => {
 
 
     // --- Establish WebSocket Connection ---
-    const WEBSOCKET_URL = `ws://${BACKEND_WEBSOCKET_HOST}/ws/chat/${selectedChatRoomId}/`;
+    const WEBSOCKET_URL = `${wsProtocol}//${BACKEND_WEBSOCKET_HOST}/ws/chat/${selectedChatRoomId}/`;
 
     ws.current = new WebSocket(WEBSOCKET_URL);
 
