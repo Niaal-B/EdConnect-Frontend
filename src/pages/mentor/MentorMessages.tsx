@@ -39,7 +39,7 @@ interface Message {
 }
 
 
-const BACKEND_WEBSOCKET_HOST = 'ed-connect-frontend.vercel.app'; 
+const BACKEND_WEBSOCKET_HOST = import.meta.env.VITE_BACKEND_WEBSOCKET_HOST;
 
 
 // --- Main MentorMessages Component ---
@@ -83,9 +83,7 @@ const MentorMessages = () => {
     loadStudents();
   }, [currentUserId]); 
 
-  // 2. Fetch chat history AND manage WebSocket connection when chat room changes
   useEffect(() => {
-    // Disconnect existing WebSocket if room changes or component unmounts
     if (ws.current) {
       console.log('Closing existing WebSocket connection.');
       ws.current.close();
@@ -122,7 +120,6 @@ const MentorMessages = () => {
 
     // --- Establish WebSocket Connection ---
     const WEBSOCKET_URL = `ws://${BACKEND_WEBSOCKET_HOST}/ws/chat/${selectedChatRoomId}/`;
-    console.log(`Attempting to connect to WebSocket at: ${WEBSOCKET_URL}`);
 
     ws.current = new WebSocket(WEBSOCKET_URL);
 
