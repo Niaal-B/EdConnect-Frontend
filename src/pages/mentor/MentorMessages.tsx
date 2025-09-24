@@ -42,7 +42,6 @@ interface Message {
 const BACKEND_WEBSOCKET_HOST = import.meta.env.VITE_BACKEND_WEBSOCKET_HOST;
 
 
-// --- Main MentorMessages Component ---
 const MentorMessages = () => {
 
   const {user } = useSelector((state: RootState) => state.auth);
@@ -58,7 +57,7 @@ const MentorMessages = () => {
   const [isLoadingStudents, setIsLoadingStudents] = useState(true);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
 
-  const ws = useRef<WebSocket | null>(null); // useRef to hold the WebSocket instance
+  const ws = useRef<WebSocket | null>(null); 
 
   useEffect(() => {
     const loadStudents = async () => {
@@ -149,7 +148,8 @@ const MentorMessages = () => {
     };
 
     ws.current.onclose = (event) => {
-      console.log('WebSocket disconnected:', event);
+      console.log('WebSocket disconnecteds:', event);
+      console.log(BACKEND_WEBSOCKET_HOST)
       setIsConnected(false);
       // Attempt to reconnect only if it was an unclean close (e.g., server restart, network issue)
       if (!event.wasClean) {
