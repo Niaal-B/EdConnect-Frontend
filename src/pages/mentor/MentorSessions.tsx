@@ -548,7 +548,7 @@ const MentorSessions = () => {
     const isSessionActive = 
         session.status === 'CONFIRMED' &&
         now <= new Date(sessionStartTime.getTime() - 10 * 60000) &&
-        now <= new Date(booking.booked_end_time);
+        now <= new Date(session.booked_end_time);
     return (
       <Card className="transition-all duration-200 hover:shadow-lg">
         <CardHeader className="pb-4">

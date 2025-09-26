@@ -16,10 +16,7 @@ const BookingSuccessPage = () => {
 
     useEffect(() => {
         if (sessionId) {
-            // In a real application, you might want to fetch the booking details
-            // from your backend using this sessionId, or simply display a generic message.
-            // The definitive update of booking status (PAID/CONFIRMED) happens via webhook.
-            // This fetch below is more for displaying up-to-date info to the user.
+
 
             const fetchBookingStatus = async () => {
                 try {
