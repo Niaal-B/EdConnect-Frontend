@@ -11,6 +11,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import api from "@/lib/api";
+import { RootState } from "@/stores/store";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 type Notification = {
   id: number;
@@ -29,7 +32,13 @@ export const NotificationsMenu = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const ws = useRef<WebSocket | null>(null);
+  const { user } = useSelector((state: RootState) => state.auth);
+  const navigate = useNavigate();
 
+  const getMessagesUrl = () => {
+    if (user?.role === "mentor") return "/mentor/messages";
+    return "/student/messages"; 
+  };
   const fetchNotifications = async () => {
     try {
       const res = await api.get("/notifications/");
@@ -61,6 +70,11 @@ export const NotificationsMenu = () => {
         toast(newNotification.message, {
           description: `From: ${newNotification.sender_username}`,
           duration: 5000,
+          action: {
+            label: "Open",
+            onClick: () => {
+              navigate(getMessagesUrl());   },
+          },
         });
       }
     };
