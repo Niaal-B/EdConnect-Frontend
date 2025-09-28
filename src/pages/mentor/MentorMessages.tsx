@@ -12,7 +12,7 @@ import api from '@/lib/api';
 import { useSelector } from 'react-redux';
 import { RootState } from '../stores/store';
 
-import { ChatArea } from '@/components/mentors/ChatArea';
+import { ChatArea } from '@/components/ChatArea';
 import { StudentSidebar } from '@/components/mentors/StudentSidebar'; 
 
 interface StudentInfo {
@@ -26,30 +26,26 @@ interface ConnectedStudent {
   id: number;
   chat_room_id: string; 
   student_info: StudentInfo;
-
 }
 
+// UPDATED: Added file_url and file_type to match backend API response
 interface Message {
   id: number; 
-  content: string;
+  content: string | null;  // Changed to allow null for file messages
   sender_id: number; 
   sender_username: string;
   timestamp: string; 
   chat_room_id: string; 
+  file_url?: string;      // Will be mapped from backend 'file' field
+  file_type?: string;     // Matches backend field name
 }
 
-
 const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-
-
 const BACKEND_WEBSOCKET_HOST = import.meta.env.VITE_BACKEND_WEBSOCKET_HOST;
 
-
 const MentorMessages = () => {
-
   const {user } = useSelector((state: RootState) => state.auth);
   const currentUserId = user.id; 
-
 
   const [selectedChatRoomId, setSelectedChatRoomId] = useState<string | null>(null);
   const [selectedStudentName, setSelectedStudentName] = useState<string>('');
@@ -89,29 +85,38 @@ const MentorMessages = () => {
     if (ws.current) {
       console.log('Closing existing WebSocket connection.');
       ws.current.close();
-      ws.current = null; // Clear the ref
-      setIsConnected(false); // Update connection status
+      ws.current = null;
+      setIsConnected(false);
     }
 
     if (!selectedChatRoomId) {
-      setMessages([]); // Clear messages if no room is selected
-      setConnectionError(''); // Clear any previous connection errors specific to a room
+      setMessages([]);
+      setConnectionError('');
       return;
     }
 
     const loadChatHistory = async () => {
       setIsLoadingHistory(true);
-      setConnectionError(''); // Clear previous errors
+      setConnectionError('');
       try {
-        const response = await api.get<Message[]>(`/chat/rooms/${selectedChatRoomId}/messages/`);
-
-        // Ensure messages are ordered by timestamp if not already from backend
-        const sortedMessages = response.data.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+        const response = await api.get(`/chat/rooms/${selectedChatRoomId}/messages/`);
+        // Map backend field names to frontend interface
+        const mappedMessages = response.data.map((msg: any) => ({
+          id: msg.id,
+          content: msg.content,
+          sender_id: msg.sender_id,
+          sender_username: msg.sender_username,
+          timestamp: msg.timestamp,
+          chat_room_id: msg.chat_room || selectedChatRoomId, // Use chat_room or fallback
+          file_url: msg.file,        // Map 'file' to 'file_url'
+          file_type: msg.file_type,  // This one matches
+        }));
+        const sortedMessages = mappedMessages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
         setMessages(sortedMessages);
       } catch (error) {
         console.error('Error fetching chat history:', error);
         setConnectionError('Failed to load chat history. Please try again.');
-        setMessages([]); // Clear messages on error
+        setMessages([]);
       } finally {
         setIsLoadingHistory(false);
       }
@@ -119,10 +124,7 @@ const MentorMessages = () => {
 
     loadChatHistory();
 
-
-    // --- Establish WebSocket Connection ---
     const WEBSOCKET_URL = `${wsProtocol}//${BACKEND_WEBSOCKET_HOST}/ws/chat/${selectedChatRoomId}/`;
-
     ws.current = new WebSocket(WEBSOCKET_URL);
 
     ws.current.onopen = () => {
@@ -136,6 +138,7 @@ const MentorMessages = () => {
       console.log('Message received:', data);
 
       if (data.type === 'chat_message') {
+        // UPDATED: Include file_url and file_type in received message
         const receivedMessage: Message = {
           id: Date.now(),
           content: data.message,
@@ -143,6 +146,8 @@ const MentorMessages = () => {
           sender_username: data.sender_username,
           timestamp: data.timestamp,
           chat_room_id: data.chat_room_id,
+          file_url: data.file_url,     // Added file support
+          file_type: data.file_type,   // Added file support
         };
         setMessages((prevMessages) => [...prevMessages, receivedMessage]);
       } else if (data.type === 'error') {
@@ -151,19 +156,13 @@ const MentorMessages = () => {
     };
 
     ws.current.onclose = (event) => {
-      console.log('WebSocket disconnecteds:', event);
-      console.log(BACKEND_WEBSOCKET_HOST)
-      console.log(new_one,"this is new one")
+      console.log('WebSocket disconnected:', event);
       setIsConnected(false);
-      // Attempt to reconnect only if it was an unclean close (e.g., server restart, network issue)
       if (!event.wasClean) {
         setConnectionError('Disconnected. Attempting to reconnect in 3 seconds...');
         setTimeout(() => {
           if (selectedChatRoomId) {
             console.log('Attempting WebSocket reconnect...');
-            // Re-trigger the effect by changing the dependency if still in the same room
-            setSelectedChatRoomId(null); // Temporarily nullify
-            setTimeout(() => setSelectedChatRoomId(event.target.url.split('/').slice(-2, -1)[0]), 10); // Restore with a tiny delay
           }
         }, 3000);
       } else {
@@ -186,7 +185,6 @@ const MentorMessages = () => {
   }, [selectedChatRoomId, currentUserId]); 
 
   const handleStudentSelect = (student: ConnectedStudent) => {
-    // Only update if a different chat room is selected
     if (selectedChatRoomId !== student.chat_room_id) {
       setSelectedChatRoomId(student.chat_room_id);
       setSelectedStudentName(student.student_info.full_name);
@@ -195,20 +193,36 @@ const MentorMessages = () => {
     }
   };
 
-  // Function to send a message via WebSocket
-  const handleSendMessage = useCallback((content: string) => {
-    if (ws.current && ws.current.readyState === WebSocket.OPEN && content.trim()) {
-      const messageData = {
-        message: content.trim(),
-
-      };
-      ws.current.send(JSON.stringify(messageData));
-      console.log('Message sent via WebSocket:', messageData.message);
+  // UPDATED: This function now matches the student side exactly
+  const handleSendMessage = useCallback((content: string, file?: File) => {
+    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+      if (file) {
+        // Handle file message
+        const reader = new FileReader();
+        reader.onload = () => {
+          const fileData = reader.result as string;
+          const messagePayload = {
+            message: content, // This will be the file name
+            file_data: fileData,
+            file_name: file.name,
+            file_type: file.type,
+          };
+          ws.current?.send(JSON.stringify(messagePayload));
+        };
+        reader.readAsDataURL(file);
+      } else if (content.trim()) {
+        // Handle regular text message
+        const messageData = {
+          message: content.trim(),
+        };
+        ws.current.send(JSON.stringify(messageData));
+        console.log('Message sent via WebSocket:', messageData.message);
+      }
     } else {
       setConnectionError('Not connected to chat. Please wait or refresh the page.');
       console.warn('Attempted to send message while WebSocket is not open or content is empty.');
     }
-  }, []); 
+  }, []);
 
   if (isLoadingStudents) {
     return (
@@ -234,7 +248,6 @@ const MentorMessages = () => {
     <MentorDashboardLayout>
       <div className="h-screen bg-gray-100 font-['Inter']">
         <div className="flex h-full">
-          {/* StudentSidebar for listing connected students */}
           <StudentSidebar
             students={connectedStudents}
             isLoading={isLoadingStudents}
@@ -242,9 +255,8 @@ const MentorMessages = () => {
             onStudentSelect={handleStudentSelect}
           />
 
-          {/* ChatArea for displaying the selected chat */}
           <ChatArea
-            selectedStudentName={selectedStudentName}
+            selectedMentorName={selectedStudentName}
             messages={messages}
             isConnected={isConnected}
             isLoadingHistory={isLoadingHistory}

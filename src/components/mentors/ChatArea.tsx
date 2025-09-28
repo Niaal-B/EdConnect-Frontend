@@ -207,15 +207,44 @@ export function ChatArea({
     }
   }, [selectedStudentName]);
 
-  const handleSend = () => {
-    if (inputValue.trim() && isConnected) {
-      onSendMessage(inputValue);
-      setInputValue('');
-      if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto';
-      }
+const handleSend = async () => {
+  if (!isConnected || (!inputValue.trim() && !selectedFile)) return;
+
+  setIsUploading(true);
+
+  let fileData = null;
+
+  if (selectedFile) {
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    try {
+      const res = await api.post("/upload-file/", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      fileData = {
+        file: res.data.file_url,
+        file_type: selectedFile.type,
+        content: selectedFile.name,
+      };
+    } catch (err) {
+      console.error("File upload failed", err);
+      setIsUploading(false);
+      return;
     }
-  };
+  }
+
+  onSendMessage({
+    content: inputValue,
+    ...fileData,
+  });
+
+  setInputValue('');
+  setSelectedFile(null);
+  setIsUploading(false);
+};
+
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

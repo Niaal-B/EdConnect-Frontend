@@ -156,10 +156,19 @@ const Messages = () => {
       setIsLoadingHistory(true);
       setConnectionError('');
       try {
-        const response = await api.get<Message[]>(
-          `/chat/rooms/${selectedChatRoomId}/messages/`,
-        );
-        const sortedMessages = response.data.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+        const response = await api.get(`/chat/rooms/${selectedChatRoomId}/messages/`);
+        // FIXED: Map backend field names to frontend interface
+        const mappedMessages = response.data.map((msg: any) => ({
+          id: msg.id,
+          content: msg.content,
+          sender_id: msg.sender_id,
+          sender_username: msg.sender_username,
+          timestamp: msg.timestamp,
+          chat_room_id: msg.chat_room || selectedChatRoomId, // Use chat_room or fallback
+          file_url: msg.file,        // Map 'file' to 'file_url'
+          file_type: msg.file_type,  // This one matches
+        }));
+        const sortedMessages = mappedMessages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
         setMessages(sortedMessages);
       } catch (error) {
         console.error('Error fetching chat history:', error);
@@ -194,7 +203,7 @@ const Messages = () => {
           sender_username: data.sender_username,
           timestamp: data.timestamp,
           chat_room_id: data.chat_room_id,
-          file_url: data.file_url,
+          file_url: data.file_url || data.file,  // FIXED: Handle both field names
           file_type: data.file_type,
         };
         setMessages((prevMessages) => [...prevMessages, receivedMessage]);
