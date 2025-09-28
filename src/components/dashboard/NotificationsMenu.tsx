@@ -42,8 +42,12 @@ export const NotificationsMenu = () => {
 
   useEffect(() => {
     fetchNotifications();
+    const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const wsHost = import.meta.env.VITE_BACKEND_WEBSOCKET_HOST;
+    const wsUrl = `${wsProtocol}//${wsHost}/ws/notifications/`;
 
-    ws.current = new WebSocket("ws://localhost/ws/notifications/");
+    ws.current = new WebSocket(wsUrl);
+
 
     ws.current.onmessage = (event) => {
       console.log(event);
@@ -51,11 +55,9 @@ export const NotificationsMenu = () => {
       if (data.type === "notification") {
         const newNotification = data.notification;
         
-        // Update state
         setNotifications((prev) => [newNotification, ...prev]);
         setUnreadCount((count) => count + 1);
         
-        // Show toast - THIS IS THE ONLY NEW PART!
         toast(newNotification.message, {
           description: `From: ${newNotification.sender_username}`,
           duration: 5000,
