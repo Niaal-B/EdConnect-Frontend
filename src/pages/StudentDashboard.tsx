@@ -8,6 +8,8 @@ import { UserStats } from "@/components/user-stats";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import StudentDashboardStats from "@/components/dashboard/StudentDashboardStats";
+import { Toaster } from "sonner";
+
 
 
 const StudentDashboard = () => {
@@ -20,6 +22,7 @@ const StudentDashboard = () => {
         <AppSidebar />
         <main className="flex-1 overflow-hidden">
           <DashboardHeader />
+          <Toaster position="top-right" />
             <StudentDashboardStats/>
         </main>
       </div>

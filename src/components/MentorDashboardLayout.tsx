@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { X } from "lucide-react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { TopNavbar } from "@/components/dashboard/TopNavbar";
+import { Toaster } from "sonner";
 
 interface MentorDashboardLayoutProps {
   children: React.ReactNode;
@@ -28,6 +29,8 @@ const MentorDashboardLayout: React.FC<MentorDashboardLayoutProps> = ({ children 
 
       {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
+      <Toaster position="top-right" />
+
         <TopNavbar setSidebarOpen={setSidebarOpen} />
 
         {/* Main content */}

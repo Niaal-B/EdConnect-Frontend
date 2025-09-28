@@ -9,8 +9,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 import api from "@/lib/api";
-
 
 type Notification = {
   id: number;
@@ -45,13 +45,21 @@ export const NotificationsMenu = () => {
 
     ws.current = new WebSocket("ws://localhost/ws/notifications/");
 
-    console.log("hey")
     ws.current.onmessage = (event) => {
-      console.log(event)
+      console.log(event);
       const data = JSON.parse(event.data);
       if (data.type === "notification") {
-        setNotifications((prev) => [data.notification, ...prev]);
+        const newNotification = data.notification;
+        
+        // Update state
+        setNotifications((prev) => [newNotification, ...prev]);
         setUnreadCount((count) => count + 1);
+        
+        // Show toast - THIS IS THE ONLY NEW PART!
+        toast(newNotification.message, {
+          description: `From: ${newNotification.sender_username}`,
+          duration: 5000,
+        });
       }
     };
 
@@ -67,7 +75,7 @@ export const NotificationsMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
+        <Button variant="ghost" size="icon" className="relative rounded-xl hover:bg-gray-100">
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
             <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500"></span>
