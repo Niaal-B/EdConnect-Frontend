@@ -33,14 +33,12 @@ export const navItems: NavItem[] = [
     name: 'My Sessions', 
     path: '/mentor/sessions', 
     icon: CalendarDays,
-    badge: 3 
   },
   { 
     id: 'messages',
     name: 'Messages', 
     path: '/mentor/messages', 
     icon: MessageSquare,
-    badge: 2
   },
   { 
     id: 'earnings',
