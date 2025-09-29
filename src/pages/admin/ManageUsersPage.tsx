@@ -35,6 +35,40 @@ const ManageUsersPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Transform API user data to match modal expectations
+  const transformUserData = (user: any, userType: 'student' | 'mentor') => {
+    const mentorProfile = user.mentor_profile;
+    
+    return {
+      id: user.id,
+      name: user.username,
+      email: user.email,
+      avatar: mentorProfile?.profile_picture || null,
+      status: user.is_active ? 'active' : 'inactive',
+      country: mentorProfile?.countries?.[0] || 'N/A',
+      registrationDate: new Date(user.created_at).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      }),
+      // Mentor-specific fields
+      verified: userType === 'mentor' ? (mentorProfile?.is_verified || false) : undefined,
+      rating: userType === 'mentor' ? '4.5' : undefined, // You'll need to add this to your API
+      reviewCount: userType === 'mentor' ? 0 : undefined, // You'll need to add this to your API
+      expertise: userType === 'mentor' ? (mentorProfile?.courses || []) : undefined,
+      sessionsCompleted: userType === 'mentor' ? 0 : undefined, // You'll need to add this to your API
+      // Student-specific fields
+      interests: userType === 'student' ? [] : undefined, // You'll need to add this to your API
+      connectedMentors: userType === 'student' ? 0 : undefined, // You'll need to add this to your API
+      // Raw data for table display
+      username: user.username,
+      role: user.role,
+      created_at: user.created_at,
+      is_active: user.is_active,
+      mentor_profile: user.mentor_profile,
+    };
+  };
+
   useEffect(() => {
     const loadUsers = async () => {
       try {
@@ -43,12 +77,13 @@ const ManageUsersPage: React.FC = () => {
         
         const users = response?.data?.users || response?.data || [];
         
-        const students = users.filter((user: any) => 
-          user?.role?.toLowerCase() === 'student'
-        );
-        const mentors = users.filter((user: any) => 
-          user?.role?.toLowerCase() === 'mentor'
-        );
+        const students = users
+          .filter((user: any) => user?.role?.toLowerCase() === 'student')
+          .map((user: any) => transformUserData(user, 'student'));
+          
+        const mentors = users
+          .filter((user: any) => user?.role?.toLowerCase() === 'mentor')
+          .map((user: any) => transformUserData(user, 'mentor'));
         
         setAllStudents(students);
         setAllMentors(mentors);
@@ -70,12 +105,12 @@ const ManageUsersPage: React.FC = () => {
     loadUsers();
   }, []);
 
-  // Function to check if current path is active
   const isActive = (path: string) => {
     return window.location.pathname === path;
   };
 
   const handleViewProfile = (user: any) => {
+    console.log('Selected user for modal:', user);
     setSelectedUser(user);
     setIsModalOpen(true);
   };
@@ -98,7 +133,6 @@ const ManageUsersPage: React.FC = () => {
     setActiveTab(value);
   };
 
-  // Enhanced filter function with better error handling
   const filterUsers = (users: any[], userType: 'student' | 'mentor', searchQuery: string, filters: any) => {
     if (!Array.isArray(users)) {
       console.warn('Users is not an array:', users);
@@ -106,25 +140,17 @@ const ManageUsersPage: React.FC = () => {
     }
 
     return users.filter(user => {
-      // Ensure user object exists
       if (!user) return false;
 
-      // Search filter - more robust search
+      // Search filter
       if (searchQuery && searchQuery.trim()) {
         const searchLower = searchQuery.toLowerCase().trim();
         
-        // Safe property access with fallbacks
         const username = user.username || user.name || '';
         const email = user.email || '';
         const id = user.id || '';
-        const firstName = user.firstName || user.first_name || '';
-        const lastName = user.lastName || user.last_name || '';
         
-        const nameMatch = username.toLowerCase().includes(searchLower) ||
-                         firstName.toLowerCase().includes(searchLower) ||
-                         lastName.toLowerCase().includes(searchLower) ||
-                         `${firstName} ${lastName}`.toLowerCase().includes(searchLower);
-        
+        const nameMatch = username.toLowerCase().includes(searchLower);
         const emailMatch = email.toLowerCase().includes(searchLower);
         const idMatch = id.toString().toLowerCase().includes(searchLower);
         
@@ -135,26 +161,14 @@ const ManageUsersPage: React.FC = () => {
       
       // Status filter
       if (filters.status !== 'all') {
-        let userStatus = 'inactive';
-        
-        // Handle different status formats
-        if (user.status) {
-          userStatus = user.status.toLowerCase();
-        } else if (user.is_active !== undefined) {
-          userStatus = user.is_active ? 'active' : 'inactive';
-        } else if (user.active !== undefined) {
-          userStatus = user.active ? 'active' : 'inactive';
-        }
-        
-        if (userStatus !== filters.status) {
+        if (user.status !== filters.status) {
           return false;
         }
       }
       
-      // Verified filter (for mentors only) - handle different data formats
+      // Verified filter (for mentors only)
       if (userType === 'mentor' && filters.verified !== 'all') {
-        const isVerified = user.verified || user.is_verified || false;
-        const verifiedString = isVerified.toString();
+        const verifiedString = user.verified?.toString() || 'false';
         if (verifiedString !== filters.verified) {
           return false;
         }
@@ -162,7 +176,7 @@ const ManageUsersPage: React.FC = () => {
       
       // Country filter
       if (filters.country !== 'all') {
-        const userCountry = user.country || user.location || '';
+        const userCountry = user.country || '';
         if (userCountry !== filters.country) {
           return false;
         }
@@ -172,7 +186,6 @@ const ManageUsersPage: React.FC = () => {
     });
   };
 
-  // Memoize filtered results to prevent unnecessary recalculations
   const filteredStudents = React.useMemo(() => {
     return filterUsers(allStudents, 'student', studentSearchQuery, studentFilters);
   }, [allStudents, studentSearchQuery, studentFilters]);
@@ -181,18 +194,14 @@ const ManageUsersPage: React.FC = () => {
     return filterUsers(allMentors, 'mentor', mentorSearchQuery, mentorFilters);
   }, [allMentors, mentorSearchQuery, mentorFilters]);
 
-  // Handle search input with debouncing
   const handleStudentSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setStudentSearchQuery(value);
+    setStudentSearchQuery(e.target.value);
   };
 
   const handleMentorSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setMentorSearchQuery(value);
+    setMentorSearchQuery(e.target.value);
   };
 
-  // Get current search query and search handler based on active tab
   const currentSearchQuery = activeTab === 'students' ? studentSearchQuery : mentorSearchQuery;
   const currentSearchHandler = activeTab === 'students' ? handleStudentSearchChange : handleMentorSearchChange;
   const currentFilters = activeTab === 'students' ? studentFilters : mentorFilters;
