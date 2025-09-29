@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import api from '@/lib/api';
-// Mock data fallback
 import { studentUsers, mentorUsers } from '@/components/admin/users/mockUsers';
 
 const ManageUsersPage: React.FC = () => {
@@ -42,7 +41,6 @@ const ManageUsersPage: React.FC = () => {
         setLoading(true);
         const response = await api.get('/admin/users/');
         
-        // More robust data handling
         const users = response?.data?.users || response?.data || [];
         
         const students = users.filter((user: any) => 
@@ -62,7 +60,6 @@ const ManageUsersPage: React.FC = () => {
         console.error('Failed to fetch users:', err);
         setError('Failed to load users');
         
-        // Fallback to mock data if API fails
         setAllStudents(studentUsers || []);
         setAllMentors(mentorUsers || []);
       } finally {

@@ -46,7 +46,7 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
         <div className="flex flex-col items-center py-4">
           <Avatar className="h-20 w-20 mb-3">
             <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback className="text-lg">{user.name.charAt(0)}</AvatarFallback>
+            <AvatarFallback className="text-lg">{user?.name?.charAt(0) ?? ""}</AvatarFallback>
           </Avatar>
           <h3 className="text-xl font-semibold text-gray-900">{user.name}</h3>
           <div className="flex items-center gap-2 mt-1">
@@ -91,7 +91,7 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                 <div>
                   <p className="text-gray-700 font-medium mb-1">Expertise Areas</p>
                   <div className="flex flex-wrap gap-1">
-                    {user.expertise.map((area: string, index: number) => (
+                    {user?.expertise?.map((area: string, index: number) => (
                       <Badge key={index} variant="outline" className="bg-blue-50">
                         {area}
                       </Badge>
@@ -114,7 +114,7 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                 <div>
                   <p className="text-gray-700 font-medium mb-1">Interests</p>
                   <div className="flex flex-wrap gap-1">
-                    {user.interests.map((interest: string, index: number) => (
+                    {user?.interests?.map((interest: string, index: number) => (
                       <Badge key={index} variant="outline" className="bg-blue-50">
                         {interest}
                       </Badge>
