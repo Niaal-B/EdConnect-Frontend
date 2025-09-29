@@ -86,34 +86,49 @@ const MentorSignup = () => {
       password: "",
       password2: "",
     };
-
+  
     if (!formData.username.trim()) {
       newErrors.username = "Username is required.";
     } else if (formData.username.length < 2) {
       newErrors.username = "Username must be at least 2 characters.";
+    } else if (formData.username.length > 20) {
+      newErrors.username = "Username cannot exceed 20 characters.";
+    } else if (!/^[a-zA-Z]/.test(formData.username)) {
+      newErrors.username = "Username must start with a letter.";
+    } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
+      newErrors.username = "Username can only contain letters, numbers, and underscores.";
     }
-
+  
     if (!formData.email.trim()) {
       newErrors.email = "Email is required.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email.";
+      newErrors.email = "Please enter a valid email address.";
     }
-
+  
     if (!formData.password) {
       newErrors.password = "Password is required.";
     } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters.";
+    } else if (!/[A-Z]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one uppercase letter.";
+    } else if (!/[a-z]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one lowercase letter.";
+    } else if (!/[0-9]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one number.";
+    } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one special character.";
     }
-
+  
     if (!formData.password2) {
       newErrors.password2 = "Please confirm your password.";
     } else if (formData.password !== formData.password2) {
       newErrors.password2 = "Passwords do not match.";
     }
-
+  
     setErrors(newErrors);
     return !Object.values(newErrors).some(error => error !== "");
   };
+  
 
   // Handle signup submission
   const handleSubmit = async (e: React.FormEvent) => {
