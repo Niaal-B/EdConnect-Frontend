@@ -14,7 +14,7 @@ const Navbar = () => {
           <div className="w-8 h-8 rounded-full bg-bridgeblue-500 flex items-center justify-center">
             <span className="font-bold text-white">B</span>
           </div>
-          <span className="text-xl font-bold text-gray-800">BridgeUp</span>
+          <span className="text-xl font-bold text-gray-800">EdConnect</span>
         </Link>
 
         {/* Desktop Menu */}

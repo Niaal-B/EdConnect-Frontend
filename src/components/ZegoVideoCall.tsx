@@ -8,7 +8,6 @@ const ZegoVideoCall = ({ roomId, userId, userName }) => {
 
     const appID = Number(import.meta.env.VITE_ZEGO_APP_ID);
     const serverSecret = import.meta.env.VITE_ZEGO_SERVER_SECRET;
-    console.log("tis is the things from env",appID)
 
     const markSessionAsCompleted = async () => {
         try {

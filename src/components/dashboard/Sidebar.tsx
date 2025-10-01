@@ -43,7 +43,7 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen, isActive }: SidebarProps)
       >
         <div className="flex items-center justify-between h-16 px-4 border-b">
           <div className="flex items-center">
-            <span className="text-xl font-semibold text-bridgeblue-600">BridgeUp</span>
+            <span className="text-xl font-semibold text-bridgeblue-600">EdConnect</span>
             <span className="ml-2 px-2 py-1 bg-bridgeblue-100 text-bridgeblue-800 text-xs font-medium rounded-md">
               Mentor
             </span>
