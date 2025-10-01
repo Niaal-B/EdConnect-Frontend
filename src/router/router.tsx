@@ -36,6 +36,8 @@ import Session from '@/pages/admin/Sessions'
 import MentorFeedback from '@/pages/mentor/MentorFeedback';
 MentorFeedback
 
+import AdminFeedbackPage from '@/pages/admin/AdminFeedbackPage';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -77,6 +79,8 @@ const router = createBrowserRouter([
       { path: 'users', element: <PrivateRoute role='admin'><ManageUsersPage /></PrivateRoute> },
       { path: 'verification', element: <PrivateRoute role='admin'><MentorVerification /></PrivateRoute> },
       { path: 'sessions', element: <PrivateRoute role='admin'><Session /></PrivateRoute> },
+      { path: 'feedback', element: <PrivateRoute role='admin'><AdminFeedbackPage /></PrivateRoute> },
+
 
     ]
   },
