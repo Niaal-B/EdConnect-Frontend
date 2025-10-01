@@ -60,7 +60,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       >
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
           <div className="flex items-center">
-            <span className="text-xl font-bold bg-gradient-to-r from-bridgeblue-600 to-indigo-600 bg-clip-text text-transparent">BridgeUp</span>
+            <span className="text-xl font-bold bg-gradient-to-r from-bridgeblue-600 to-indigo-600 bg-clip-text text-transparent">EdConnect</span>
             <span className="ml-2 px-2 py-1 bg-bridgeblue-100 text-bridgeblue-800 text-xs font-medium rounded-md">
               Admin
             </span>
