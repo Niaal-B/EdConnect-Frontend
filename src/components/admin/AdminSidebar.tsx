@@ -26,9 +26,7 @@ const adminNavItems: AdminNavItem[] = [
   { name: 'Manage Users', path: '/admin/users', icon: Users },
   { name: 'Mentor Verification', path: '/admin/verification', icon: UserCheck },
   { name: 'Sessions Management', path: '/admin/sessions', icon: Calendar },
-  { name: 'Payments', path: '/admin/payments', icon: DollarSign },
   { name: 'Feedback & Ratings', path: '/admin/feedback', icon: Star },
-  { name: 'Settings', path: '/admin/settings', icon: Settings },
 ];
 
 interface AdminSidebarProps {
