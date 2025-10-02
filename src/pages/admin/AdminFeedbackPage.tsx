@@ -14,11 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import api from '@/lib/api';
-// Import these from your project:
-// import { useAuthVerification } from '../../hooks/useAuthVerification';
-// import { RootState } from '@/stores/store';
-// import { useSelector } from 'react-redux';
-// import { useNavigate } from "react-router-dom";
+
 
 interface FeedbackItem {
   id: number;
