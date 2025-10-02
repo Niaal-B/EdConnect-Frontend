@@ -35,7 +35,6 @@ const ManageUsersPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Transform API user data to match modal expectations
   const transformUserData = (user: any, userType: 'student' | 'mentor') => {
     const mentorProfile = user.mentor_profile;
     
@@ -51,16 +50,16 @@ const ManageUsersPage: React.FC = () => {
         month: 'short',
         day: 'numeric'
       }),
-      // Mentor-specific fields
+
       verified: userType === 'mentor' ? (mentorProfile?.is_verified || false) : undefined,
-      rating: userType === 'mentor' ? '4.5' : undefined, // You'll need to add this to your API
-      reviewCount: userType === 'mentor' ? 0 : undefined, // You'll need to add this to your API
+      rating: userType === 'mentor' ? '4.5' : undefined, 
+      reviewCount: userType === 'mentor' ? 0 : undefined, 
       expertise: userType === 'mentor' ? (mentorProfile?.courses || []) : undefined,
-      sessionsCompleted: userType === 'mentor' ? 0 : undefined, // You'll need to add this to your API
-      // Student-specific fields
-      interests: userType === 'student' ? [] : undefined, // You'll need to add this to your API
-      connectedMentors: userType === 'student' ? 0 : undefined, // You'll need to add this to your API
-      // Raw data for table display
+      sessionsCompleted: userType === 'mentor' ? 0 : undefined, 
+
+      interests: userType === 'student' ? [] : undefined, 
+      connectedMentors: userType === 'student' ? 0 : undefined, 
+
       username: user.username,
       role: user.role,
       created_at: user.created_at,
