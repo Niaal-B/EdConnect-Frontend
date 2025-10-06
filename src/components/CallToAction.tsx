@@ -15,10 +15,10 @@ const CallToAction = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button className="bg-white text-bridgeblue-500 hover:bg-gray-100 px-8 py-6 text-lg h-auto" asChild>
-              <Link to="/student-signup">Join as a Student</Link>
+              <Link to="/student/login">Join as a Student</Link>
             </Button>
             <Button className="bg-white text-bridgeblue-500 hover:bg-gray-100 px-8 py-6 text-lg h-auto" asChild>
-              <Link to="/mentor-signup">Become a Mentor</Link>
+              <Link to="/mentor/login">Become a Mentor</Link>
             </Button>
           </div>
         </div>

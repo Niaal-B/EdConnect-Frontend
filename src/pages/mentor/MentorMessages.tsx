@@ -100,7 +100,6 @@ const MentorMessages = () => {
       setConnectionError('');
       try {
         const response = await api.get(`/chat/rooms/${selectedChatRoomId}/messages/`);
-        // Map backend field names to frontend interface
         const mappedMessages = response.data.map((msg: any) => ({
           id: msg.id,
           content: msg.content,
@@ -138,7 +137,6 @@ const MentorMessages = () => {
       console.log('Message received:', data);
 
       if (data.type === 'chat_message') {
-        // UPDATED: Include file_url and file_type in received message
         const receivedMessage: Message = {
           id: Date.now(),
           content: data.message,

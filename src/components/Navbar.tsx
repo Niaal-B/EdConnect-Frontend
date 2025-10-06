@@ -25,21 +25,21 @@ const Navbar = () => {
           <Link to="/about" className="text-gray-700 hover:text-bridgeblue-600 font-medium">
             About
           </Link>
-          <Link to="/mentors" className="text-gray-700 hover:text-bridgeblue-600 font-medium">
+          <Link to="/mentors/login" className="text-gray-700 hover:text-bridgeblue-600 font-medium">
             Mentors
           </Link>
-          <Link to="/contact" className="text-gray-700 hover:text-bridgeblue-600 font-medium">
-            Contact
+          <Link to="/student/login" className="text-gray-700 hover:text-bridgeblue-600 font-medium">
+            Students
           </Link>
         </div>
 
         {/* Authentication buttons */}
         <div className="hidden md:flex items-center space-x-4">
           <Button variant="outline" className="border-bridgeblue-500 text-bridgeblue-500 hover:bg-bridgeblue-50">
-            Log in
+          <Link to="/student/login">Join as a Student</Link>
           </Button>
           <Button className="bg-bridgeblue-500 text-white hover:bg-bridgeblue-600">
-            Join us
+          <Link to="/mentor/login">Become a Mentor</Link>
           </Button>
         </div>
 

@@ -33,7 +33,7 @@ const Index = () => {
                 </Button>
                 </Link>
 
-                <Link to="/mentor/register">
+                <Link to="/mentor/login">
                 <Button variant="outline" className="border-bridgeblue-500 text-bridgeblue-500 hover:bg-bridgeblue-50 px-8">
                   Become a Mentor
                 </Button>
