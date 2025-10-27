@@ -213,16 +213,7 @@ const AdminLoginForm = () => {
                 )}
               </div>
 
-              {/* Forgot password link */}
-              <div className="text-right">
-                <Link 
-                  to="/admin/forgot-password" 
-                  className="text-sm text-primary hover:text-primary/80 hover:underline"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
-
+             
               {/* Submit button */}
               <Button 
                 type="submit" 
