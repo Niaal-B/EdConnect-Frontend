@@ -36,10 +36,10 @@ const Navbar = () => {
         {/* Authentication buttons */}
         <div className="hidden md:flex items-center space-x-4">
           <Button variant="outline" className="border-bridgeblue-500 text-bridgeblue-500 hover:bg-bridgeblue-50">
-          <Link to="/student/login">Join as a Student</Link>
+          <Link to="/student/login">Login as a Student</Link>
           </Button>
           <Button className="bg-bridgeblue-500 text-white hover:bg-bridgeblue-600">
-          <Link to="/mentor/login">Become a Mentor</Link>
+          <Link to="/mentor/login">Login as Mentor</Link>
           </Button>
         </div>
 
