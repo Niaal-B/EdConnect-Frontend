@@ -14,8 +14,11 @@ function PrivateRoute({ children,role }: { children: JSX.Element,role:string }) 
 
   useEffect(() => {
     let isMounted = true; 
+    let retryCount = 0;
+    const maxRetries = 5;
+    const retryDelay = 300; // 300ms delay between retries
 
-    const verifyAuth = async () => {
+    const verifyAuth = async (isRetry = false) => {
       try {
         const response = await api.get('auth/check-session');
         if (isMounted) {
@@ -28,23 +31,40 @@ function PrivateRoute({ children,role }: { children: JSX.Element,role:string }) 
               profile_image : response.data.user.profile_picture,
               is_verified:response.data.user.is_verified
             }));
+            setIsCheckingAuth(false);
           } else {
             dispatch(logout());
+            setIsCheckingAuth(false);
           }
-          setIsCheckingAuth(false);
         }
       } catch (error) {
-        if (isMounted) {
-          dispatch(logout());
-          setIsCheckingAuth(false);
+        // If first attempt fails and we haven't exceeded retries, wait and retry
+        // This handles the case where cookies aren't ready yet after Google OAuth redirect
+        if (!isRetry && retryCount < maxRetries) {
+          retryCount++;
+          setTimeout(() => {
+            if (isMounted) {
+              verifyAuth(true);
+            }
+          }, retryDelay);
+        } else {
+          // All retries exhausted or already retried, log out
+          if (isMounted) {
+            dispatch(logout());
+            setIsCheckingAuth(false);
+          }
         }
       }
     };
 
-    verifyAuth();
+    // Small initial delay to allow cookies to be processed after redirect
+    const timer = setTimeout(() => {
+      verifyAuth();
+    }, 200);
 
     return () => {
       isMounted = false;
+      clearTimeout(timer);
     };
   }, [dispatch, location.pathname]);
 
