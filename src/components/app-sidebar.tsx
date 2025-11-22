@@ -35,13 +35,19 @@ export function AppSidebar() {
   return (
     <Sidebar className="border-r border-gray-200 bg-white">
       {/* Header */}
-      <SidebarHeader className="">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl shadow-md bg-transparent">
-             <p>EdConnect</p>
-              </div>
-            </div>
-          </SidebarHeader>
+      <SidebarHeader className="p-4">
+        <Link to="/student/dashboard" className="flex items-center gap-3 no-underline">
+          <div className="p-2.5 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg">
+            <GraduationCap className="h-6 w-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              EdConnect
+            </h1>
+            <p className="text-xs text-gray-500">Mentorship Platform</p>
+          </div>    
+        </Link>
+      </SidebarHeader>
 
 
       {/* Menu Content */}
