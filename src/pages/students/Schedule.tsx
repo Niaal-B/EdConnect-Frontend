@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -144,6 +145,7 @@ interface PaginationInfo {
 type BookingStatus = 'ALL' | 'PENDING_PAYMENT' | 'CONFIRMED' | 'COMPLETED' | 'CANCELED_BY_STUDENT_FULL_REFUND' | 'CANCELED_BY_STUDENT_NO_REFUND' | 'CANCELED_BY_MENTOR';
 
 const Schedule = () => {
+  const navigate = useNavigate();
   const [bookingsByStatus, setBookingsByStatus] = useState<Record<BookingStatus, Booking[]>>({
     ALL: [],
     PENDING_PAYMENT: [],
@@ -653,7 +655,10 @@ const Schedule = () => {
       </h3>
       <p className="text-gray-600 mb-6">{tabInfo.description}</p>
       {status === 'ALL' && (
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+        <Button 
+          onClick={() => navigate('/student/discover')}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+        >
           Browse Mentors
         </Button>
       )}
