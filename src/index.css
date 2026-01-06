@@ -100,10 +100,22 @@
 
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
   }
 
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+  }
+
+  /* Prevent horizontal scrolling */
+  #root {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
   }
 }

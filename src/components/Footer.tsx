@@ -3,18 +3,18 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-50 pt-16 pb-10 md:pt-20 md:pb-12">
-      <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12">
+    <footer className="bg-gray-50 pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-10 md:pb-12">
+      <div className="container mx-auto px-4 sm:px-6 md:px-6 lg:px-8 max-w-7xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-12 mb-8 sm:mb-10 md:mb-12">
           {/* Brand Section */}
-          <div className="col-span-1 sm:col-span-2 lg:col-span-1 space-y-4">
-            <div className="flex items-center space-x-2.5">
-              <div className="w-9 h-9 rounded-full bg-bridgeblue-500 flex items-center justify-center shadow-md">
-                <span className="font-bold text-white text-sm">B</span>
+          <div className="col-span-1 sm:col-span-2 lg:col-span-1 space-y-3 sm:space-y-4">
+            <div className="flex items-center space-x-2 sm:space-x-2.5">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-bridgeblue-500 flex items-center justify-center shadow-md">
+                <span className="font-bold text-white text-xs sm:text-sm">B</span>
               </div>
-              <span className="text-xl font-bold text-gray-800 tracking-tight">BridgeUp</span>
+              <span className="text-lg sm:text-xl font-bold text-gray-800 tracking-tight">BridgeUp</span>
             </div>
-            <p className="text-gray-600 leading-relaxed text-sm md:text-base max-w-sm">
+            <p className="text-gray-600 leading-relaxed text-xs sm:text-sm md:text-base max-w-sm">
               Connecting students with mentors studying abroad for guidance, support, and success.
             </p>
           </div>

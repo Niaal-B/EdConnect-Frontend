@@ -21,20 +21,20 @@ const Navbar = () => {
   }, [location]);
 
   return (
-    <nav className={`w-full py-4 bg-white/95 backdrop-blur-md fixed top-0 z-50 transition-all duration-300 ${
+    <nav className={`w-full py-3 sm:py-4 bg-white/95 backdrop-blur-md fixed top-0 z-50 transition-all duration-300 ${
       isScrolled ? 'shadow-md' : 'shadow-sm'
     }`}>
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 flex items-center justify-between">
+      <div className="container mx-auto px-4 sm:px-6 md:px-6 lg:px-8 flex items-center justify-between max-w-7xl">
         {/* Logo */}
         <Link 
           to="/" 
-          className="flex items-center space-x-2.5 group transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-bridgeblue-500 focus:ring-offset-2 rounded-lg p-1"
+          className="flex items-center space-x-2 sm:space-x-2.5 group transition-transform duration-300 hover:scale-105 active:scale-100 focus:outline-none focus:ring-2 focus:ring-bridgeblue-500 focus:ring-offset-2 rounded-lg p-1 touch-manipulation"
           aria-label="EdConnect Home"
         >
-          <div className="w-9 h-9 rounded-full bg-bridgeblue-500 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow duration-300">
-            <span className="font-bold text-white text-sm">B</span>
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-bridgeblue-500 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow duration-300">
+            <span className="font-bold text-white text-xs sm:text-sm">B</span>
           </div>
-          <span className="text-xl font-bold text-gray-800 tracking-tight">EdConnect</span>
+          <span className="text-lg sm:text-xl font-bold text-gray-800 tracking-tight">EdConnect</span>
         </Link>
 
         {/* Desktop Menu */}
@@ -82,9 +82,9 @@ const Navbar = () => {
           </Button>
         </div>
 
-        {/* Mobile menu button */}
+        {/* Mobile menu button - Touch-friendly */}
         <button
-          className="md:hidden text-gray-700 focus:outline-none focus:ring-2 focus:ring-bridgeblue-500 focus:ring-offset-2 rounded-md p-2 transition-colors duration-200 hover:bg-gray-100"
+          className="md:hidden text-gray-700 focus:outline-none focus:ring-2 focus:ring-bridgeblue-500 focus:ring-offset-2 rounded-md p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors duration-200 hover:bg-gray-100 active:bg-gray-200 touch-manipulation"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
           aria-expanded={isMenuOpen}
@@ -103,47 +103,47 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <div className={`md:hidden bg-white border-t border-gray-100 overflow-hidden transition-all duration-300 ease-in-out ${
-        isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        isMenuOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'
       }`}>
-        <div className="container mx-auto px-4 py-4 space-y-2">
+        <div className="container mx-auto px-4 sm:px-6 py-4 space-y-1 max-w-7xl">
           <Link 
             to="/" 
-            className="block text-gray-700 hover:text-bridgeblue-600 font-medium py-2.5 px-2 rounded-md hover:bg-bridgeblue-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-bridgeblue-500 focus:ring-offset-2"
+            className="block text-gray-700 hover:text-bridgeblue-600 active:text-bridgeblue-700 font-medium py-3.5 px-3 rounded-md hover:bg-bridgeblue-50 active:bg-bridgeblue-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-bridgeblue-500 focus:ring-offset-2 min-h-[44px] flex items-center touch-manipulation"
             onClick={() => setIsMenuOpen(false)}
           >
             Home
           </Link>
           <Link 
             to="/about" 
-            className="block text-gray-700 hover:text-bridgeblue-600 font-medium py-2.5 px-2 rounded-md hover:bg-bridgeblue-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-bridgeblue-500 focus:ring-offset-2"
+            className="block text-gray-700 hover:text-bridgeblue-600 active:text-bridgeblue-700 font-medium py-3.5 px-3 rounded-md hover:bg-bridgeblue-50 active:bg-bridgeblue-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-bridgeblue-500 focus:ring-offset-2 min-h-[44px] flex items-center touch-manipulation"
             onClick={() => setIsMenuOpen(false)}
           >
             About
           </Link>
           <Link 
             to="/mentors/login" 
-            className="block text-gray-700 hover:text-bridgeblue-600 font-medium py-2.5 px-2 rounded-md hover:bg-bridgeblue-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-bridgeblue-500 focus:ring-offset-2"
+            className="block text-gray-700 hover:text-bridgeblue-600 active:text-bridgeblue-700 font-medium py-3.5 px-3 rounded-md hover:bg-bridgeblue-50 active:bg-bridgeblue-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-bridgeblue-500 focus:ring-offset-2 min-h-[44px] flex items-center touch-manipulation"
             onClick={() => setIsMenuOpen(false)}
           >
             Mentors
           </Link>
           <Link 
             to="/student/login" 
-            className="block text-gray-700 hover:text-bridgeblue-600 font-medium py-2.5 px-2 rounded-md hover:bg-bridgeblue-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-bridgeblue-500 focus:ring-offset-2"
+            className="block text-gray-700 hover:text-bridgeblue-600 active:text-bridgeblue-700 font-medium py-3.5 px-3 rounded-md hover:bg-bridgeblue-50 active:bg-bridgeblue-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-bridgeblue-500 focus:ring-offset-2 min-h-[44px] flex items-center touch-manipulation"
             onClick={() => setIsMenuOpen(false)}
           >
             Students
           </Link>
-          <div className="pt-4 space-y-2 border-t border-gray-100">
+          <div className="pt-4 space-y-3 border-t border-gray-100">
             <Button 
               variant="outline" 
-              className="w-full border-2 border-bridgeblue-500 text-bridgeblue-500 hover:bg-bridgeblue-50 font-semibold"
+              className="w-full border-2 border-bridgeblue-500 text-bridgeblue-500 hover:bg-bridgeblue-50 active:bg-bridgeblue-100 font-semibold min-h-[48px] touch-manipulation"
               asChild
             >
               <Link to="/student/login" onClick={() => setIsMenuOpen(false)}>Login as Student</Link>
             </Button>
             <Button 
-              className="w-full bg-bridgeblue-500 text-white hover:bg-bridgeblue-600 font-semibold shadow-md"
+              className="w-full bg-bridgeblue-500 text-white hover:bg-bridgeblue-600 active:bg-bridgeblue-700 font-semibold shadow-md min-h-[48px] touch-manipulation"
               asChild
             >
               <Link to="/mentor/login" onClick={() => setIsMenuOpen(false)}>Login as Mentor</Link>
