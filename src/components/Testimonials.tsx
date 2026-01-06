@@ -18,33 +18,58 @@ const Testimonials = () => {
   ];
 
   return (
-    <section className="py-16 bg-white">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Success Stories</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+    <section className="py-20 md:py-28 bg-white">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8">
+        <div className="text-center mb-16 space-y-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
+            Success Stories
+          </h2>
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-light">
             Hear from students and mentors who've connected through BridgeUp
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-6xl mx-auto">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="p-8 border border-gray-200 rounded-lg">
+            <Card 
+              key={index} 
+              className="group p-8 md:p-10 border border-gray-200 rounded-2xl hover:shadow-xl hover:shadow-bridgeblue-500/10 transition-all duration-300 hover:-translate-y-2 bg-white focus-within:ring-2 focus-within:ring-bridgeblue-500 focus-within:ring-offset-2"
+            >
               <div className="flex flex-col h-full">
-                <div className="flex-grow">
-                  <p className="text-gray-700 italic mb-6">"{testimonial.quote}"</p>
+                {/* Quote icon */}
+                <div className="mb-6">
+                  <svg 
+                    className="w-12 h-12 text-bridgeblue-500/20 group-hover:text-bridgeblue-500/30 transition-colors duration-300" 
+                    fill="currentColor" 
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.996 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.984zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                  </svg>
                 </div>
-                <div className="flex items-center mt-4">
-                  <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
+                
+                <div className="flex-grow mb-8">
+                  <p className="text-gray-700 text-lg md:text-xl leading-relaxed font-light italic">
+                    "{testimonial.quote}"
+                  </p>
+                </div>
+                
+                <div className="flex items-center pt-6 border-t border-gray-100">
+                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden mr-4 ring-2 ring-bridgeblue-100 group-hover:ring-bridgeblue-300 transition-all duration-300 shadow-md">
                     <img 
                       src={testimonial.avatar} 
                       alt={testimonial.name} 
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      loading="lazy"
                     />
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
-                    <p className="text-sm text-gray-600">{testimonial.role}</p>
+                    <h4 className="font-bold text-gray-900 text-base md:text-lg mb-1">
+                      {testimonial.name}
+                    </h4>
+                    <p className="text-sm md:text-base text-gray-600">
+                      {testimonial.role}
+                    </p>
                   </div>
                 </div>
               </div>
