@@ -1,25 +1,26 @@
 
 import { Card } from "@/components/ui/card";
+import { Globe, GraduationCap, FileText, Users } from "lucide-react";
 
 const Features = () => {
   const features = [
     {
-      icon: "🌍",
+      icon: Globe,
       title: "Global Network",
       description: "Connect with mentors from top universities around the world.",
     },
     {
-      icon: "🎓",
+      icon: GraduationCap,
       title: "Personalized Guidance",
       description: "Get customized advice for your academic journey from those who've been there.",
     },
     {
-      icon: "📖",
+      icon: FileText,
       title: "Application Support",
       description: "Receive help with applications, essays, and interview preparation.",
     },
     {
-      icon: "🤝",
+      icon: Users,
       title: "Cultural Adaptation",
       description: "Learn how to adapt to new cultures and environments abroad.",
     },
@@ -47,8 +48,8 @@ const Features = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-bridgeblue-50/0 to-bridgeblue-50/0 group-hover:from-bridgeblue-50/50 group-hover:to-transparent transition-all duration-300"></div>
               
               <div className="relative z-10">
-                <div className="text-5xl mb-6 transform transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
-                  {feature.icon}
+                <div className="mb-6 transform transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                  <feature.icon className="w-12 h-12 md:w-14 md:h-14 text-bridgeblue-500 group-hover:text-bridgeblue-600 transition-colors duration-300" />
                 </div>
                 <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-bridgeblue-600 transition-colors duration-300">
                   {feature.title}
