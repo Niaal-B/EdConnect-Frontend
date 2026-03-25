@@ -1,12 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from '@/components/app-sidebar';
 import { ChatArea } from '@/components/ChatArea';
 import api from '@/lib/api';
 import { useSelector } from 'react-redux';
-import { RootState } from '../stores/store';
+import { RootState } from '@/stores/store';
 
 interface MentorInfo {
   id: number;
@@ -126,7 +124,7 @@ const Messages = () => {
       try {
         const response = await api.get<ConnectedMentor[]>(
           `/connections/my-mentors/`);
-        setConnectedMentors(response.data.results);
+        setConnectedMentors((response.data as any).results);
       } catch (error) {
         console.error('Error fetching mentors:', error);
         setConnectionError('Failed to load mentors. Please check your network or try again.');
@@ -291,10 +289,7 @@ const Messages = () => {
   }
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-100 font-['Inter']">
-        <AppSidebar activeSection="Messages" />
-
+    <>
         <div className="flex-1 flex">
           <MentorSidebar
             mentors={connectedMentors}
@@ -313,8 +308,7 @@ const Messages = () => {
             onSendMessage={handleSendMessage}
           />
         </div>
-      </div>
-    </SidebarProvider>
+    </>
   );
 };
 

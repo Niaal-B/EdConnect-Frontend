@@ -3,8 +3,6 @@
   import type React from "react"
 
   import { useState, useEffect, useCallback } from "react"
-  import { SidebarProvider } from "@/components/ui/sidebar"
-  import { AppSidebar } from "@/components/app-sidebar"
   import { Button } from "@/components/ui/button"
   import { Badge } from "@/components/ui/badge"
   import { Input } from "@/components/ui/input"
@@ -287,10 +285,8 @@
     ]
 
     return (
-      <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-gray-50">
-          <AppSidebar activeSection="Discover" />
-          <main className="flex-1">
+      <>
+        <main className="flex-1">
             {/* Clean Hero Section */}
             <div className="relative bg-white border-b">
               <div className="max-w-6xl mx-auto px-8 py-16">
@@ -457,10 +453,9 @@
               )}
             </div>
           </main>
-        </div>
-      </SidebarProvider>
-    )
-  }
+      </>
+    );
+  };
 
   function debounce<T extends (...args: any[]) => any>(func: T, delay: number): T {
     let timeoutId: NodeJS.Timeout

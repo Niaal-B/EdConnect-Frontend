@@ -11,11 +11,11 @@ import { store } from '@/stores/store';
 import PrivateRoute from '@/components/PrivateRoute';
 import AdminLoginForm from '@/pages/admin/AdminLogin';
 import AdminDashboard from '@/pages/admin/AdminDashboard';
-import StudentDashboard from '@/pages/StudentDashboard';
+import Dashboard from '@/pages/students/Dashboard';
 import ManageUsersPage from '@/pages/admin/ManageUsersPage';
 import MentorProfile from '@/pages/mentor/MentorProfile';
 import MentorVerification from '@/pages/admin/MentorVerification';
-import StudentProfile from '@/pages/students/StudentProfile';
+import Profile from '@/pages/students/Profile';
 import ResetPassword from '@/pages/ResetPassword';
 import ForgotPasswordPage from '@/pages/ForgotPassword';
 import Discover from '@/pages/students/Discover';
@@ -23,7 +23,8 @@ import MentorSlots from '@/pages/mentor/MentorSlots';
 import MentorLogin from '@/pages/MentorLogin';
 import StudentSignup from '@/pages/StudentSignUp';
 import StudentLogin from '@/pages/students/StudentLogin';
-import MyMentors from '@/pages/MyMentors';
+import MyMentors from '@/pages/students/MyMentors';
+import Settings from '@/pages/students/Settings';
 import ChatTest from '@/components/ui/ChatTest';
 import Messages from '@/pages/students/Messages';
 import MentorMessages from '@/pages/mentor/MentorMessages';
@@ -37,6 +38,7 @@ import MentorFeedback from '@/pages/mentor/MentorFeedback';
 MentorFeedback
 
 import AdminFeedbackPage from '@/pages/admin/AdminFeedbackPage';
+import StudentLayout from '@/components/layouts/StudentLayout';
 
 const router = createBrowserRouter([
   {
@@ -60,15 +62,17 @@ const router = createBrowserRouter([
   },
   {
     path: '/student',
+    element: <StudentLayout />,
     children: [
       { path: 'register', element: <StudentSignup /> },
       { path: 'login', element: <StudentLogin /> },
-      { path: 'dashboard', element: <PrivateRoute role='student'><StudentDashboard /></PrivateRoute> },
-      { path: 'profile', element: <PrivateRoute role='student'><StudentProfile /></PrivateRoute> },
+      { path: 'dashboard', element: <PrivateRoute role='student'><Dashboard /></PrivateRoute> },
+      { path: 'profile', element: <PrivateRoute role='student'><Profile /></PrivateRoute> },
       { path: 'discover', element: <PrivateRoute role='student'><Discover /></PrivateRoute> },
       { path: 'my-mentors', element: <PrivateRoute role='student'><MyMentors /></PrivateRoute> },
       { path: 'messages', element: <PrivateRoute role='student'><Messages /></PrivateRoute> },
       { path: 'schedule', element: <PrivateRoute role='student'><Schedule /></PrivateRoute> },
+      { path: 'settings', element: <PrivateRoute role='student'><Settings /></PrivateRoute> },
     ]
   },
   {

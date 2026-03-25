@@ -6,16 +6,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getStudentProfile, updateStudentProfile, uploadProfilePicture } from '@/lib/api';
+import { getStudentProfile, updateStudentProfile, uploadProfilePicture, type StudentProfile } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import api from '@/lib/api';
 
-const StudentProfile = () => {
+const Profile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<StudentProfile>({
+    id: 0,
     user: {
+      id: 0,
       username: '',
       email: '',
     },
@@ -50,12 +52,12 @@ const StudentProfile = () => {
     fetchProfile();
   }, []);
 
-  const handleInputChange = (field: string, value: string | string[]) => {
+  const handleInputChange = (field: keyof StudentProfile | 'user', value: any) => {
     setProfile(prev => {
       if (typeof value === 'string') {
         return {
           ...prev,
-          [field]: field.includes('_') ? 
+          [field]: (field.includes('_') || field.includes('preferred') || field.includes('interested')) ? 
             value.split(',').map(item => item.trim()) : 
             value
         };
@@ -140,20 +142,26 @@ const StudentProfile = () => {
   const handleSave = async () => {
     setIsSaving(true);
     try {
+      const { id, user, profile_picture, ...profileData } = profile;
+      console.log(profileData)
       const dataToSend = {
-        ...profile,
+        ...profileData,
         education_level: Array.isArray(profile.education_level) 
           ? profile.education_level[0] // Ensure it’s a single string
           : profile.education_level,
         fields_of_interest: Array.isArray(profile.fields_of_interest) 
           ? profile.fields_of_interest 
-          : profile.fields_of_interest.split(',').map(item => item.trim()),
+          : typeof profile.fields_of_interest === 'string' 
+            ? (profile.fields_of_interest as string).split(',').map(item => item.trim())
+            : [],
         preferred_countries: Array.isArray(profile.preferred_countries) 
           ? profile.preferred_countries 
-          : profile.preferred_countries.split(',').map(item => item.trim()),
+          : typeof profile.preferred_countries === 'string'
+            ? (profile.preferred_countries as string).split(',').map(item => item.trim())
+            : [],
         interested_universities: Array.isArray(profile.interested_universities) 
           ? profile.interested_universities 
-          : profile.interested_universities.split(',').map(item => item.trim()),
+          : (profile.interested_universities as string).split(',').map(item => item.trim()),
       };
 
       await updateStudentProfile(dataToSend);
@@ -166,30 +174,14 @@ const StudentProfile = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center p-20">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="max-w-4xl mx-auto p-6">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => navigate('/')}
-            className="rounded-xl hover:bg-white"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Profile Settings</h1>
-            <p className="text-gray-600">Manage your account and preferences</p>
-          </div>
-        </div>
+    <div className="max-w-4xl mx-auto">
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Profile Information */}
@@ -255,7 +247,7 @@ const StudentProfile = () => {
                       onChange={(e) => handleInputChange('user', {
                         ...profile.user,
                         username: e.target.value
-                      })}
+                      } as any)}
                       className="mt-1 rounded-xl" 
                     />
                   </div>
@@ -379,9 +371,8 @@ const StudentProfile = () => {
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 };
 
-export default StudentProfile;
+export default Profile;

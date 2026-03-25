@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/app-sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -869,11 +867,7 @@ const Schedule = () => {
   }
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50">
-        <AppSidebar activeSection="Schedule" />
-        <main className="flex-1 p-8">
-          <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto p-6">
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">My Schedule</h1>
               <p className="text-gray-600">View and manage your booked mentorship sessions</p>
@@ -1017,10 +1011,7 @@ const Schedule = () => {
               </Card>
             )}
           </div>
-        </main>
-      </div>
-    </SidebarProvider>
-  );
+    );
 };
 
 export default Schedule;

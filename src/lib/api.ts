@@ -211,16 +211,18 @@ export interface Education {
 }
 
 export interface MentorApiResponse {
-  success: boolean;
-  mentors: Mentor[];
-  total: number;
+  success?: boolean;
+  mentors?: Mentor[];
+  total?: number;
   count: number;
-  page: number;
-  results: Mentor[];
-  has_next: boolean;
-  has_previous: boolean;
-  next_page: number | null;
-  previous_page: number | null;
+  results?: Mentor[];
+  page?: number;
+  has_next?: boolean;
+  has_previous?: boolean;
+  next_page?: number | null;
+  previous_page?: number | null;
+  next?: string | null;
+  previous?: string | null;
 }
 
 export interface MentorSearchParams {
@@ -308,7 +310,7 @@ export const discoverMentorApi = {
 };
 
 //student side apis
-interface StudentProfile {
+export interface StudentProfile {
   id: number;
   user: {
     id: number;
