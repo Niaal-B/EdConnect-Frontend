@@ -39,6 +39,7 @@ MentorFeedback
 
 import AdminFeedbackPage from '@/pages/admin/AdminFeedbackPage';
 import StudentLayout from '@/components/layouts/StudentLayout';
+import ErrorPage from '@/pages/Error';
 
 const router = createBrowserRouter([
   {
@@ -110,7 +111,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/chat',
-    element: <ChatTest chatRoomId={1} currentUserId={2} />
+    element: <ChatTest chatRoomId="1" currentUserId={2} />
   },
   {
     path: '/session-student',
@@ -119,6 +120,10 @@ const router = createBrowserRouter([
   {
     path: '/session-mentor',
     element: <PrivateRoute role='mentor'><SessionPage/></PrivateRoute>
+  },
+  {
+    path: '*',
+    element: <ErrorPage />
   }
 ]);
 
