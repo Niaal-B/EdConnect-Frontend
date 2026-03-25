@@ -157,17 +157,44 @@ const MentorSignup = () => {
   
       navigate("/check-email");
     } catch (error) {
+      console.log("Registration error:", error);
       let errorMessage = "An unexpected error occurred during registration";
-      
-      if (error && typeof error === 'object') {
+      const newErrors = {
+        username: "",
+        email: "",
+        password: "",
+        password2: "",
+      };
+      let hasFieldErrors = false;
+    
+      if (error && typeof error === "object") {
+        // Handle field-specific errors from backend (e.g., {"email": ["Already exists"]})
+        const fieldMapping: Record<string, keyof typeof newErrors> = {
+          username: "username",
+          email: "email",
+          password: "password",
+          password2: "password2"
+        };
+    
+        Object.entries(error as Record<string, any>).forEach(([field, messages]) => {
+          if (fieldMapping[field]) {
+            hasFieldErrors = true;
+            const errorArray = Array.isArray(messages) ? messages : [messages];
+            newErrors[fieldMapping[field]] = errorArray.join(", ");
+          }
+        });
+    
+        // If we have field-specific errors, set them and don't show toast
+        if (hasFieldErrors) {
+          setErrors(newErrors);
+          return; // Exit early, user will see error next to field
+        }
+    
+        // Handle non-field errors
         if ('non_field_errors' in error) {
           const nonFieldErrors = (error as any).non_field_errors;
           if (Array.isArray(nonFieldErrors)) {
-            if (nonFieldErrors.includes("Email already registered.")) {
-              errorMessage = "This email is already registered. Please use a different email or login.";
-            } else {
-              errorMessage = nonFieldErrors.join(', ');
-            }
+            errorMessage = nonFieldErrors.join(', ');
           }
         }
         else if ('message' in error) {
