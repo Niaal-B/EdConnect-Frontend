@@ -87,12 +87,12 @@ export function AppSidebar() {
         >
           <Avatar className="h-10 w-10 ring-2 ring-white shadow-sm">
             <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white font-semibold text-sm">
-              {user.username?.slice(0, 2).toUpperCase() || "NA"}
+              {user?.username?.slice(0, 2).toUpperCase() || "GU"}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1">
-            <p className="font-semibold text-gray-900 text-sm">{user.username}</p>
-            <p className="text-xs text-gray-500">{user.role}</p>
+            <p className="font-semibold text-gray-900 text-sm">{user?.username || "Guest User"}</p>
+            <p className="text-xs text-gray-500">{user?.role || "Guest"}</p>
           </div>
          
         </Link>
