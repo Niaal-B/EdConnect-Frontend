@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { format, parse } from 'date-fns';
 import { fromZonedTime, formatInTimeZone } from 'date-fns-tz';
 import { Calendar, Clock, DollarSign, Globe, XCircle } from 'lucide-react';
@@ -13,15 +15,50 @@ import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 
 import api from '@/lib/api';
 
-interface SlotFormData {
-  date?: Date;
-  startTime: string;
-  endTime: string;
-  fee: number | '';
-}
+const slotSchema = z.object({
+  date: z.date({ required_error: 'Date is required' }),
+  startTime: z.string().min(1, 'Start time is required'),
+  endTime: z.string().min(1, 'End time is required'),
+  fee: z.coerce.number({
+    required_error: 'Fee is required',
+    invalid_type_error: 'Fee must be a number',
+  }).positive('Fee must be a positive number'),
+}).superRefine((data, ctx) => {
+  if (!data.date || !data.startTime || !data.endTime) return;
+  const start = parse(`${format(data.date, 'yyyy-MM-dd')}T${data.startTime}`, "yyyy-MM-dd'T'HH:mm", new Date());
+  const end = parse(`${format(data.date, 'yyyy-MM-dd')}T${data.endTime}`, "yyyy-MM-dd'T'HH:mm", new Date());
+  
+  if (end <= start) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "End time must be after start time",
+      path: ["endTime"]
+    });
+    return;
+  }
+
+  const duration = (end.getTime() - start.getTime()) / (1000 * 60);
+  if (duration < 15 || duration > 120) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Duration must be between 15 and 120 minutes",
+      path: ["endTime"]
+    });
+  }
+});
+
+type SlotFormData = z.infer<typeof slotSchema>;
 
 interface CreatedSlot {
   id: string;
@@ -44,22 +81,19 @@ const MentorSlotCreation: React.FC = () => {
   const [userTimezone, setUserTimezone] = useState<string>('');
   const [createdSlots, setCreatedSlots] = useState<CreatedSlot[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const { toast } = useToast();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors }
-  } = useForm<SlotFormData>({
+  const form = useForm<SlotFormData>({
+    resolver: zodResolver(slotSchema),
     defaultValues: {
       startTime: '',
       endTime: '',
-      fee: ''
-    }
+      fee: undefined
+    },
+    mode: "onChange",
   });
+
+  const { reset } = form;
 
   useEffect(() => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -100,38 +134,11 @@ const MentorSlotCreation: React.FC = () => {
   const timeOptions = generateTimeOptions();
 
   const onSubmit = async (data: SlotFormData) => {
-    if (!data.date) {
-      toast({ title: 'Validation Error', description: 'Date is required', variant: 'destructive' });
-      return;
-    }
-
-    if (!data.startTime || !data.endTime) {
-      toast({ title: 'Validation Error', description: 'Start and end time are required', variant: 'destructive' });
-      return;
-    }
-
-    const start = parse(`${format(data.date, 'yyyy-MM-dd')}T${data.startTime}`, "yyyy-MM-dd'T'HH:mm", new Date());
-    const end = parse(`${format(data.date, 'yyyy-MM-dd')}T${data.endTime}`, "yyyy-MM-dd'T'HH:mm", new Date());
-    const duration = (end.getTime() - start.getTime()) / (1000 * 60);
-
-    if (end <= start) {
-      toast({ title: 'Validation Error', description: 'End time must be after start time', variant: 'destructive' });
-      return;
-    }
-
-    if (duration < 15 || duration > 120) {
-      toast({ title: 'Validation Error', description: 'Duration must be 15–120 minutes', variant: 'destructive' });
-      return;
-    }
-
-    if (!data.fee || data.fee <= 0) {
-      toast({ title: 'Validation Error', description: 'Fee must be a positive number', variant: 'destructive' });
-      return;
-    }
-
     setIsSubmitting(true);
 
     try {
+      const start = parse(`${format(data.date, 'yyyy-MM-dd')}T${data.startTime}`, "yyyy-MM-dd'T'HH:mm", new Date());
+      const end = parse(`${format(data.date, 'yyyy-MM-dd')}T${data.endTime}`, "yyyy-MM-dd'T'HH:mm", new Date());
       const startUTC = fromZonedTime(start, userTimezone);
       const endUTC = fromZonedTime(end, userTimezone);
 
@@ -143,11 +150,9 @@ const MentorSlotCreation: React.FC = () => {
       });
 
       const newSlot = res.data;
-      console.log(newSlot,"this is the slots")
       setCreatedSlots(prev => [newSlot, ...prev]);
       toast({ title: 'Success', description: 'Slot created successfully' });
       reset();
-      setSelectedDate(undefined);
     } catch (error) {
       toast({ title: 'Error', description: 'Failed to create slot', variant: 'destructive' });
     } finally {
@@ -158,69 +163,125 @@ const MentorSlotCreation: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-8">
       <div>
-    <h1 className="text-2xl font-bold mb-4">Create Availability Slot</h1>
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <Label>Date</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline">
-                {selectedDate ? format(selectedDate, 'PPP') : 'Pick a date'}
-                <Calendar className="ml-2 h-4 w-4" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <CalendarComponent
-                mode="single"
-                selected={selectedDate}
-                onSelect={(date) => {
-                  setSelectedDate(date);
-                  setValue('date', date);
-                }}
-                disabled={(date) => date <   new Date()}
+        <h1 className="text-2xl font-bold mb-4">Create Availability Slot</h1>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col space-y-2 mt-2">
+                    <FormLabel>Date</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? format(field.value, "PPP") : "Pick a date"}
+                            <Calendar className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <CalendarComponent
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </PopoverContent>
-          </Popover>
-        </div>
 
-        <div>
-          <Label>Fee ($)</Label>
-          <div className="relative">
-            <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-            <Input type="number" placeholder="Enter fee" className="pl-10" {...register('fee')} />
-          </div>
-        </div>
+              <FormField
+                control={form.control}
+                name="fee"
+                render={({ field }) => (
+                  <FormItem className="space-y-2 mt-2">
+                    <FormLabel>Fee ($)</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                        <Input 
+                          type="number" 
+                          placeholder="Enter fee" 
+                          className="pl-10" 
+                          {...field} 
+                          value={field.value ?? ''} 
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="startTime"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Start Time</FormLabel>
+                    <FormControl>
+                      <select 
+                        className={cn("w-full border rounded p-2 h-10", form.formState.errors.startTime ? "border-red-500" : "border-input")} 
+                        {...field}
+                      >
+                        <option value="">Select Start Time</option>
+                        {timeOptions.map(time => <option key={time} value={time}>{time}</option>)}
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="endTime"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>End Time</FormLabel>
+                    <FormControl>
+                      <select 
+                        className={cn("w-full border rounded p-2 h-10", form.formState.errors.endTime ? "border-red-500" : "border-input")} 
+                        {...field}
+                      >
+                        <option value="">Select End Time</option>
+                        {timeOptions.map(time => <option key={time} value={time}>{time}</option>)}
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="text-sm text-blue-700 flex items-center gap-2 mt-4">
+              <Globe className="h-4 w-4" />
+              Your timezone: <strong>{userTimezone}</strong>
+            </div>
+
+            <Button type="submit" className="w-full mt-4" disabled={isSubmitting}>
+              {isSubmitting ? 'Creating Slot...' : 'Create Availability Slot'}
+            </Button>
+          </form>
+        </Form>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <Label>Start Time</Label>
-          <select className="w-full border rounded p-2" {...register('startTime')}>
-            <option value="">Select Start Time</option>
-            {timeOptions.map(time => <option key={time} value={time}>{time}</option>)}
-          </select>
-        </div>
-
-        <div>
-          <Label>End Time</Label>
-          <select className="w-full border rounded p-2" {...register('endTime')}>
-            <option value="">Select End Time</option>
-            {timeOptions.map(time => <option key={time} value={time}>{time}</option>)}
-          </select>
-        </div>
-      </div>
-
-      <div className="text-sm text-blue-700 flex items-center gap-2">
-        <Globe className="h-4 w-4" />
-        Your timezone: <strong>{userTimezone}</strong>
-      </div>
-
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
-        {isSubmitting ? 'Creating Slot...' : 'Create Availability Slot'}
-      </Button>
-    </form>
-  </div>
+      
       {createdSlots.length > 0 && (
         <Card>
           <CardHeader>
@@ -235,7 +296,8 @@ const MentorSlotCreation: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4 text-gray-600" />
                       <p className="font-semibold text-sm">
-                        {formatInTimeZone(new Date(slot.start_time), userTimezone, 'MMM dd, yyyy')}
+                         {/* Display slot date formatting omitted to keep it similar to original */}
+                          {formatInTimeZone(new Date(slot.start_time), userTimezone, 'MMM dd, yyyy')}
                       </p>
                     </div>
 

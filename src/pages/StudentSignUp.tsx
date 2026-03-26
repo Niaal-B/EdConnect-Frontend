@@ -1,23 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import axios from 'axios';
 import api from "@/lib/api";
-import { Loader2, GraduationCap, BookOpen, Globe, Sparkles, UserPlus } from "lucide-react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Loader2, GraduationCap, UserPlus } from "lucide-react";
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores/store';
 import { useAuthVerification } from '../hooks/useAuthVerification';
 
-const registerStudent = async (data: {
-  email: string;
-  username: string;
-  password: string;
-  password2: string;
-  role: string;
-}) => {
+const registerStudent = async (data: any) => {
   try {
     const response = await api.post('/user/register/', data);
     return response.data;
@@ -29,6 +33,31 @@ const registerStudent = async (data: {
   }
 };
 
+const studentSignupSchema = z.object({
+  username: z.string()
+    .min(2, "Username must be at least 2 characters.")
+    .max(20, "Username cannot exceed 20 characters.")
+    .regex(/^[a-zA-Z]/, "Username must start with a letter.")
+    .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores."),
+  email: z.string()
+    .min(1, "Email is required.")
+    .max(50, "Email must be less than 50 characters.")
+    .email("Please enter a valid email."),
+  password: z.string()
+    .min(8, "Password must be at least 8 characters.")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter.")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter.")
+    .regex(/[0-9]/, "Password must contain at least one number.")
+    .regex(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character."),
+  password2: z.string()
+    .min(1, "Please confirm your password.")
+}).refine((data) => data.password === data.password2, {
+  message: "Passwords do not match.",
+  path: ["password2"],
+});
+
+type StudentSignupFormValues = z.infer<typeof studentSignupSchema>;
+
 const StudentSignup = () => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
@@ -37,115 +66,32 @@ const StudentSignup = () => {
 
   useEffect(() => {
     if (!checking && isAuthenticated) {
-      if(user.role==='mentor'){navigate("/mentor/dashboard");}
-      else{navigate("/student/dashboard");}
+      if(user.role === 'mentor'){ navigate("/mentor/dashboard"); }
+      else { navigate("/student/dashboard"); }
     }
   }, [checking, isAuthenticated, navigate]);
 
-  // Form state
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    password2: "",
-  });
-
-  // Error state
-  const [errors, setErrors] = useState({
-    username: "",
-    email: "",
-    password: "",
-    password2: "",
-  });
-
-  // Handle input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[name as keyof typeof errors]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ""
-      }));
-    }
-  };
-
-  // Validate form for signup
-  const validateForm = () => {
-    const newErrors = {
+  const form = useForm<StudentSignupFormValues>({
+    resolver: zodResolver(studentSignupSchema),
+    defaultValues: {
       username: "",
       email: "",
       password: "",
       password2: "",
-    };
-  
-    if (!formData.username.trim()) {
-      newErrors.username = "Username is required.";
-    } else if (formData.username.length < 2) {
-      newErrors.username = "Username must be at least 2 characters.";
-    } else if (formData.username.length > 20) {
-      newErrors.username = "Username cannot exceed 20 characters.";
-    } else if (!/^[a-zA-Z]/.test(formData.username)) {
-      newErrors.username = "Username must start with a letter.";
-    } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
-      newErrors.username = "Username can only contain letters, numbers, and underscores.";
-    }
-  
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email.";
-    } else if (formData.email.length > 50) {
-      newErrors.email = "Email must be less than 50 characters.";
-    }
-  
-    if (!formData.password) {
-      newErrors.password = "Password is required.";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters.";
-    } else if (!/[A-Z]/.test(formData.password)) {
-      newErrors.password = "Password must contain at least one uppercase letter.";
-    } else if (!/[a-z]/.test(formData.password)) {
-      newErrors.password = "Password must contain at least one lowercase letter.";
-    } else if (!/[0-9]/.test(formData.password)) {
-      newErrors.password = "Password must contain at least one number.";
-    } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
-      newErrors.password = "Password must contain at least one special character.";
-    }
-  
-    if (!formData.password2) {
-      newErrors.password2 = "Please confirm your password.";
-    } else if (formData.password !== formData.password2) {
-      newErrors.password2 = "Passwords do not match.";
-    }
-  
-    setErrors(newErrors);
-  
-    return !Object.values(newErrors).some(error => error !== "");
-  };
-  
+    },
+    mode: "onChange",
+  });
 
   // Handle signup submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-
+  const onSubmit = async (data: StudentSignupFormValues) => {
     try {
       setIsSubmitting(true);
       
       const payload = {
-        email: formData.email,
-        username: formData.username,
-        password: formData.password,
-        password2: formData.password2,
+        email: data.email,
+        username: data.username,
+        password: data.password,
+        password2: data.password2,
         role: "student"
       };
   
@@ -159,17 +105,10 @@ const StudentSignup = () => {
       navigate("/check-email");
     } catch (error) {
       let errorMessage = "An unexpected error occurred during registration";
-      const newErrors = {
-        username: "",
-        email: "",
-        password: "",
-        password2: "",
-      };
       let hasFieldErrors = false;
     
       if (error && typeof error === "object") {
-        // Handle field-specific errors from backend
-        const fieldMapping: Record<string, keyof typeof newErrors> = {
+        const fieldMapping: Record<string, keyof StudentSignupFormValues> = {
           username: "username",
           email: "email",
           password: "password",
@@ -180,17 +119,12 @@ const StudentSignup = () => {
           if (fieldMapping[field]) {
             hasFieldErrors = true;
             const errorArray = Array.isArray(messages) ? messages : [messages];
-            newErrors[fieldMapping[field]] = errorArray.join(", ");
+            form.setError(fieldMapping[field], { type: "server", message: errorArray.join(", ") });
           }
         });
 
-        // If we have field-specific errors, set them and don't show toast
-        if (hasFieldErrors) {
-          setErrors(newErrors);
-          return; // Exit early, don't show toast
-        }
+        if (hasFieldErrors) return;
 
-        // Handle non-field errors
         if ("non_field_errors" in error) {
           const nonFieldErrors = (error as any).non_field_errors;
           if (Array.isArray(nonFieldErrors)) {
@@ -205,14 +139,12 @@ const StudentSignup = () => {
         }
       }
     
-      // Only show toast for non-field errors
       toast({
         title: "Registration Failed",
         description: errorMessage,
         variant: "destructive",
       });
-    }
-    finally {
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -221,18 +153,15 @@ const StudentSignup = () => {
     <div className="min-h-screen bg-gray-50 relative overflow-hidden flex">
       {/* Left Side - Animated Visual Section */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-bridgeblue-600 via-bridgeblue-500 to-bridgeblue-700 overflow-hidden">
-        {/* Animated Mesh Gradient Background */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent_50%)]"></div>
           <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.1),transparent_50%)]"></div>
         </div>
 
-        {/* Floating Geometric Shapes */}
         <div className="absolute top-20 left-20 w-32 h-32 border-2 border-white/20 rounded-3xl rotate-45 animate-float" style={{ animationDelay: '0s' }}></div>
         <div className="absolute bottom-32 right-24 w-24 h-24 border-2 border-white/15 rounded-full animate-float" style={{ animationDelay: '2s' }}></div>
         <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-white/10 rounded-2xl rotate-12 animate-float" style={{ animationDelay: '4s' }}></div>
 
-        {/* Large Floating Icons */}
         <div className="absolute top-1/4 right-1/4 animate-float" style={{ animationDelay: '1s' }}>
           <UserPlus className="w-24 h-24 text-white/20" />
         </div>
@@ -240,7 +169,6 @@ const StudentSignup = () => {
           <GraduationCap className="w-20 h-20 text-white/15" />
         </div>
 
-        {/* Content */}
         <div className="relative z-10 flex flex-col justify-center items-start px-16 text-white">
           <Link to="/" className="mb-12 group">
             <div className="flex items-center space-x-3 mb-2">
@@ -258,7 +186,6 @@ const StudentSignup = () => {
             Join thousands of students connecting with expert mentors to achieve their study abroad dreams.
           </p>
           
-          {/* Feature Pills */}
           <div className="flex flex-wrap gap-3">
             <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-sm font-medium">
               🎓 Expert Guidance
@@ -272,14 +199,12 @@ const StudentSignup = () => {
           </div>
         </div>
 
-        {/* Animated Gradient Orbs */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse-light"></div>
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-pulse-light" style={{ animationDelay: '2s' }}></div>
       </div>
 
       {/* Right Side - Signup Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-8 lg:p-12 relative overflow-y-auto">
-        {/* Subtle Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0" style={{
             backgroundImage: `radial-gradient(circle at 2px 2px, rgb(59, 130, 246) 1px, transparent 0)`,
@@ -288,7 +213,6 @@ const StudentSignup = () => {
         </div>
 
         <div className="w-full max-w-md relative z-10 my-8">
-          {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-8 animate-in fade-in slide-in-from-top-8 duration-700">
             <Link to="/" className="inline-flex items-center space-x-3 group">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-bridgeblue-500 to-bridgeblue-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
@@ -298,9 +222,7 @@ const StudentSignup = () => {
             </Link>
           </div>
 
-          {/* Glassmorphic Card */}
           <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 sm:p-10 animate-in fade-in slide-in-from-right-8 duration-700 delay-150">
-            {/* Decorative Top Accent */}
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-bridgeblue-500 to-transparent rounded-full"></div>
             
             <div className="space-y-1 mb-8">
@@ -311,158 +233,151 @@ const StudentSignup = () => {
                 Create your account and start learning
               </p>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Username field */}
-              <div className="space-y-2 group">
-                <label htmlFor="username" className="text-sm font-semibold text-gray-700 block">
-                  Username
-                </label>
-                <div className="relative">
-                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-bridgeblue-500/20 to-bridgeblue-600/20 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity duration-300`}></div>
-                  <Input
-                    id="username"
-                    name="username"
-                    type="text"
-                    placeholder="johndoe"
-                    value={formData.username}
-                    onChange={handleChange}
-                    className={`relative h-14 text-base transition-all duration-300 pl-5 pr-12 rounded-xl border-2 bg-white/50 backdrop-blur-sm ${
-                      errors.username 
-                        ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 shadow-lg shadow-red-100/50" 
-                        : "border-gray-200 focus:border-bridgeblue-500 focus:ring-4 focus:ring-bridgeblue-500/10 hover:border-bridgeblue-300 hover:shadow-md hover:shadow-bridgeblue-100/50"
-                    }`}
-                  />
-                  {formData.username && !errors.username && (
-                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                      <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
-                    </div>
+
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field, fieldState }) => (
+                    <FormItem className="space-y-2 group">
+                      <FormLabel className="text-sm font-semibold text-gray-700 block">Username</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-bridgeblue-500/20 to-bridgeblue-600/20 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity duration-300`}></div>
+                          <Input
+                            placeholder="johndoe"
+                            {...field}
+                            className={`relative h-14 text-base transition-all duration-300 pl-5 pr-12 rounded-xl border-2 bg-white/50 backdrop-blur-sm ${fieldState.invalid 
+                                ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 shadow-lg shadow-red-100/50" 
+                                : "border-gray-200 focus:border-bridgeblue-500 focus:ring-4 focus:ring-bridgeblue-500/10 hover:border-bridgeblue-300 hover:shadow-md hover:shadow-bridgeblue-100/50"
+                            }`}
+                          />
+                          {field.value && !fieldState.invalid && (
+                            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                              <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-sm text-red-600 font-medium flex items-center gap-2 mt-1.5 animate-in fade-in slide-in-from-top-1">
+                        <span className="text-red-500 text-xs">●</span>
+                      </FormMessage>
+                    </FormItem>
                   )}
-                </div>
-                {errors.username && (
-                  <p className="text-sm text-red-600 font-medium flex items-center gap-2 mt-1.5 animate-in fade-in slide-in-from-top-1">
-                    <span className="text-red-500 text-xs">●</span>
-                    {errors.username}
-                  </p>
-                )}
-              </div>
+                />
 
-              {/* Email field */}
-              <div className="space-y-2 group">
-                <label htmlFor="email" className="text-sm font-semibold text-gray-700 block">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-bridgeblue-500/20 to-bridgeblue-600/20 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity duration-300`}></div>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="john.doe@student.edu"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={`relative h-14 text-base transition-all duration-300 pl-5 pr-12 rounded-xl border-2 bg-white/50 backdrop-blur-sm ${
-                      errors.email 
-                        ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 shadow-lg shadow-red-100/50" 
-                        : "border-gray-200 focus:border-bridgeblue-500 focus:ring-4 focus:ring-bridgeblue-500/10 hover:border-bridgeblue-300 hover:shadow-md hover:shadow-bridgeblue-100/50"
-                    }`}
-                  />
-                  {formData.email && !errors.email && (
-                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                      <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
-                    </div>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field, fieldState }) => (
+                    <FormItem className="space-y-2 group">
+                      <FormLabel className="text-sm font-semibold text-gray-700 block">Email Address</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-bridgeblue-500/20 to-bridgeblue-600/20 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity duration-300`}></div>
+                          <Input
+                            type="email"
+                            placeholder="john.doe@student.edu"
+                            {...field}
+                            className={`relative h-14 text-base transition-all duration-300 pl-5 pr-12 rounded-xl border-2 bg-white/50 backdrop-blur-sm ${fieldState.invalid 
+                                ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 shadow-lg shadow-red-100/50" 
+                                : "border-gray-200 focus:border-bridgeblue-500 focus:ring-4 focus:ring-bridgeblue-500/10 hover:border-bridgeblue-300 hover:shadow-md hover:shadow-bridgeblue-100/50"
+                            }`}
+                          />
+                          {field.value && !fieldState.invalid && (
+                            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                              <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-sm text-red-600 font-medium flex items-center gap-2 mt-1.5 animate-in fade-in slide-in-from-top-1">
+                        <span className="text-red-500 text-xs">●</span>
+                      </FormMessage>
+                    </FormItem>
                   )}
-                </div>
-                {errors.email && (
-                  <p className="text-sm text-red-600 font-medium flex items-center gap-2 mt-1.5 animate-in fade-in slide-in-from-top-1">
-                    <span className="text-red-500 text-xs">●</span>
-                    {errors.email}
-                  </p>
-                )}
-              </div>
+                />
 
-              {/* Password field */}
-              <div className="space-y-2 group">
-                <label htmlFor="password" className="text-sm font-semibold text-gray-700 block">
-                  Password
-                </label>
-                <div className="relative">
-                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-bridgeblue-500/20 to-bridgeblue-600/20 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity duration-300`}></div>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={`relative h-14 text-base transition-all duration-300 pl-5 pr-12 rounded-xl border-2 bg-white/50 backdrop-blur-sm ${
-                      errors.password 
-                        ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 shadow-lg shadow-red-100/50" 
-                        : "border-gray-200 focus:border-bridgeblue-500 focus:ring-4 focus:ring-bridgeblue-500/10 hover:border-bridgeblue-300 hover:shadow-md hover:shadow-bridgeblue-100/50"
-                    }`}
-                  />
-                  {formData.password && !errors.password && (
-                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                      <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
-                    </div>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field, fieldState }) => (
+                    <FormItem className="space-y-2 group">
+                      <FormLabel className="text-sm font-semibold text-gray-700 block">Password</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-bridgeblue-500/20 to-bridgeblue-600/20 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity duration-300`}></div>
+                          <Input
+                            type="password"
+                            placeholder="Enter your password"
+                            {...field}
+                            className={`relative h-14 text-base transition-all duration-300 pl-5 pr-12 rounded-xl border-2 bg-white/50 backdrop-blur-sm ${fieldState.invalid 
+                                ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 shadow-lg shadow-red-100/50" 
+                                : "border-gray-200 focus:border-bridgeblue-500 focus:ring-4 focus:ring-bridgeblue-500/10 hover:border-bridgeblue-300 hover:shadow-md hover:shadow-bridgeblue-100/50"
+                            }`}
+                          />
+                          {field.value && !fieldState.invalid && (
+                            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                              <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-sm text-red-600 font-medium flex items-center gap-2 mt-1.5 animate-in fade-in slide-in-from-top-1">
+                        <span className="text-red-500 text-xs">●</span>
+                      </FormMessage>
+                    </FormItem>
                   )}
-                </div>
-                {errors.password && (
-                  <p className="text-sm text-red-600 font-medium flex items-center gap-2 mt-1.5 animate-in fade-in slide-in-from-top-1">
-                    <span className="text-red-500 text-xs">●</span>
-                    {errors.password}
-                  </p>
-                )}
-              </div>
+                />
 
-              {/* Confirm Password */}
-              <div className="space-y-2 group">
-                <label htmlFor="password2" className="text-sm font-semibold text-gray-700 block">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-bridgeblue-500/20 to-bridgeblue-600/20 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity duration-300`}></div>
-                  <Input
-                    id="password2"
-                    name="password2"
-                    type="password"
-                    placeholder="Confirm your password"
-                    value={formData.password2}
-                    onChange={handleChange}
-                    className={`relative h-14 text-base transition-all duration-300 pl-5 pr-12 rounded-xl border-2 bg-white/50 backdrop-blur-sm ${
-                      errors.password2 
-                        ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 shadow-lg shadow-red-100/50" 
-                        : "border-gray-200 focus:border-bridgeblue-500 focus:ring-4 focus:ring-bridgeblue-500/10 hover:border-bridgeblue-300 hover:shadow-md hover:shadow-bridgeblue-100/50"
-                    }`}
-                  />
-                  {formData.password2 && !errors.password2 && formData.password === formData.password2 && (
-                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                      <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
-                    </div>
+                <FormField
+                  control={form.control}
+                  name="password2"
+                  render={({ field, fieldState }) => (
+                    <FormItem className="space-y-2 group">
+                      <FormLabel className="text-sm font-semibold text-gray-700 block">Confirm Password</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-bridgeblue-500/20 to-bridgeblue-600/20 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity duration-300`}></div>
+                          <Input
+                            type="password"
+                            placeholder="Confirm your password"
+                            {...field}
+                            className={`relative h-14 text-base transition-all duration-300 pl-5 pr-12 rounded-xl border-2 bg-white/50 backdrop-blur-sm ${fieldState.invalid 
+                                ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 shadow-lg shadow-red-100/50" 
+                                : "border-gray-200 focus:border-bridgeblue-500 focus:ring-4 focus:ring-bridgeblue-500/10 hover:border-bridgeblue-300 hover:shadow-md hover:shadow-bridgeblue-100/50"
+                            }`}
+                          />
+                          {field.value && !fieldState.invalid && form.watch('password') === field.value && (
+                            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                              <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-sm text-red-600 font-medium flex items-center gap-2 mt-1.5 animate-in fade-in slide-in-from-top-1">
+                        <span className="text-red-500 text-xs">●</span>
+                      </FormMessage>
+                    </FormItem>
                   )}
-                </div>
-                {errors.password2 && (
-                  <p className="text-sm text-red-600 font-medium flex items-center gap-2 mt-1.5 animate-in fade-in slide-in-from-top-1">
-                    <span className="text-red-500 text-xs">●</span>
-                    {errors.password2}
-                  </p>
-                )}
-              </div>
+                />
 
-              <Button 
-                type="submit" 
-                className="w-full h-14 text-base font-semibold bg-gradient-to-r from-bridgeblue-500 via-bridgeblue-600 to-bridgeblue-500 hover:from-bridgeblue-600 hover:via-bridgeblue-700 hover:to-bridgeblue-600 text-white shadow-xl shadow-bridgeblue-500/30 hover:shadow-2xl hover:shadow-bridgeblue-500/40 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 rounded-xl relative overflow-hidden group mt-2"
-                disabled={isSubmitting}
-              >
-                <span className="relative z-10 flex items-center justify-center">
-                  {isSubmitting && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                  {isSubmitting ? "Creating Account..." : "Create Account"}
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </Button>
-            </form>
+                <Button 
+                  type="submit" 
+                  className="w-full h-14 text-base font-semibold bg-gradient-to-r from-bridgeblue-500 via-bridgeblue-600 to-bridgeblue-500 hover:from-bridgeblue-600 hover:via-bridgeblue-700 hover:to-bridgeblue-600 text-white shadow-xl shadow-bridgeblue-500/30 hover:shadow-2xl hover:shadow-bridgeblue-500/40 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 rounded-xl relative overflow-hidden group mt-2"
+                  disabled={isSubmitting}
+                >
+                  <span className="relative z-10 flex items-center justify-center">
+                    {isSubmitting && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+                    {isSubmitting ? "Creating Account..." : "Create Account"}
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Button>
+              </form>
+            </Form>
 
-            {/* Sign In Link */}
             <div className="text-center pt-6 border-t border-gray-100">
               <p className="text-sm text-gray-600">
                 Already have an account?{" "}

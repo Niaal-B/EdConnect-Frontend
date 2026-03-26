@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import axios from 'axios';
 import api from "@/lib/api";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Loader2, UserCog, Award, Sparkles, TrendingUp } from "lucide-react";
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '@/stores/authslice';
@@ -14,10 +24,7 @@ import { useAuthVerification } from '../hooks/useAuthVerification';
 import GoogleAuthButtons from '../components/auth/AuthButtons.jsx';
 
 // API function for login
-const loginMentor = async (data: {
-  email: string;
-  password: string;
-}) => {
+const loginMentor = async (data: any) => {
   try {
     const response = await api.post('/mentors/login/', data, {
       withCredentials: true,
@@ -31,6 +38,16 @@ const loginMentor = async (data: {
   }
 };
 
+const mentorLoginSchema = z.object({
+  email: z.string()
+    .min(1, "Email is required.")
+    .email("Please enter a valid email."),
+  password: z.string()
+    .min(1, "Password is required.")
+});
+
+type MentorLoginFormValues = z.infer<typeof mentorLoginSchema>;
+
 const MentorLogin = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
@@ -40,75 +57,28 @@ const MentorLogin = () => {
 
   useEffect(() => {
     if (!checking && isAuthenticated) {
-      if(user.role==='mentor'){navigate("/mentor/dashboard");}
-      else{navigate("/student/dashboard");}
+      if(user.role === 'mentor'){ navigate("/mentor/dashboard"); }
+      else { navigate("/student/dashboard"); }
     }
   }, [checking, isAuthenticated, navigate]);
 
-  // Form state
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  // Error state
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-  });
-
-  // Handle input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[name as keyof typeof errors]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ""
-      }));
-    }
-  };
-
-  // Validate form for login
-  const validateForm = () => {
-    const newErrors = {
+  const form = useForm<MentorLoginFormValues>({
+    resolver: zodResolver(mentorLoginSchema),
+    defaultValues: {
       email: "",
       password: "",
-    };
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email.";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required.";
-    }
-
-    setErrors(newErrors);
-    return !newErrors.email && !newErrors.password;
-  };
+    },
+    mode: "onChange",
+  });
 
   // Handle login submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-
+  const onSubmit = async (data: MentorLoginFormValues) => {
     try {
       setIsSubmitting(true);
       
       const payload = {
-        email: formData.email,
-        password: formData.password
+        email: data.email,
+        password: data.password
       };
   
       const response = await loginMentor(payload);
@@ -271,112 +241,100 @@ const MentorLogin = () => {
                 Sign in to continue mentoring students
               </p>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
-              {/* Email field */}
-              <div className="space-y-2.5 group">
-                <label htmlFor="email" className="text-sm font-semibold text-gray-700 block">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-bridgeblue-500/25 to-bridgeblue-600/25 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity duration-300`}></div>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="john.doe@example.com"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={`relative h-14 sm:h-16 text-base sm:text-lg transition-all duration-300 pl-5 pr-12 rounded-xl border-2 bg-white/70 backdrop-blur-md ${
-                      errors.email 
-                        ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 shadow-lg shadow-red-100/50" 
-                        : "border-gray-200 focus:border-bridgeblue-500 focus:ring-4 focus:ring-bridgeblue-500/15 hover:border-bridgeblue-300 hover:shadow-lg hover:shadow-bridgeblue-100/50"
-                    }`}
-                  />
-                  {formData.email && !errors.email && (
-                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
-                    </div>
-                  )}
-                </div>
-                {errors.email && (
-                  <p className="text-sm text-red-600 font-medium flex items-center gap-2 mt-1.5 animate-in fade-in slide-in-from-top-1">
-                    <span className="text-red-500 text-xs">●</span>
-                    {errors.email}
-                  </p>
-                )}
-              </div>
 
-              {/* Password field */}
-              <div className="space-y-2.5 group">
-                <label htmlFor="password" className="text-sm font-semibold text-gray-700 block">
-                  Password
-                </label>
-                <div className="relative">
-                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-bridgeblue-500/25 to-bridgeblue-600/25 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity duration-300`}></div>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={`relative h-14 sm:h-16 text-base sm:text-lg transition-all duration-300 pl-5 pr-12 rounded-xl border-2 bg-white/70 backdrop-blur-md ${
-                      errors.password 
-                        ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 shadow-lg shadow-red-100/50" 
-                        : "border-gray-200 focus:border-bridgeblue-500 focus:ring-4 focus:ring-bridgeblue-500/15 hover:border-bridgeblue-300 hover:shadow-lg hover:shadow-bridgeblue-100/50"
-                    }`}
-                  />
-                  {formData.password && !errors.password && (
-                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
-                    </div>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 relative z-10">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field, fieldState }) => (
+                    <FormItem className="space-y-2.5 group">
+                      <FormLabel className="text-sm font-semibold text-gray-700 block">Email Address</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-bridgeblue-500/25 to-bridgeblue-600/25 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity duration-300`}></div>
+                          <Input
+                            type="email"
+                            placeholder="john.doe@example.com"
+                            {...field}
+                            className={`relative h-14 sm:h-16 text-base sm:text-lg transition-all duration-300 pl-5 pr-12 rounded-xl border-2 bg-white/70 backdrop-blur-md ${fieldState.invalid 
+                                ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 shadow-lg shadow-red-100/50" 
+                                : "border-gray-200 focus:border-bridgeblue-500 focus:ring-4 focus:ring-bridgeblue-500/15 hover:border-bridgeblue-300 hover:shadow-lg hover:shadow-bridgeblue-100/50"
+                            }`}
+                          />
+                          {field.value && !fieldState.invalid && (
+                            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-sm text-red-600 font-medium flex items-center gap-2 mt-1.5 animate-in fade-in slide-in-from-top-1">
+                        <span className="text-red-500 text-xs">●</span>
+                      </FormMessage>
+                    </FormItem>
                   )}
-                </div>
-                {errors.password && (
-                  <p className="text-sm text-red-600 font-medium flex items-center gap-2 mt-1.5 animate-in fade-in slide-in-from-top-1">
-                    <span className="text-red-500 text-xs">●</span>
-                    {errors.password}
-                  </p>
-                )}
-              </div>
+                />
 
-              {/* Forgot password link */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-2 gap-3 sm:gap-0">
-                <div className="flex items-center">
-                  <input type="checkbox" id="remember" className="w-4 h-4 sm:w-5 sm:h-5 rounded border-gray-300 text-bridgeblue-600 focus:ring-bridgeblue-500" />
-                  <label htmlFor="remember" className="ml-2 text-sm sm:text-base text-gray-600">Remember me</label>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field, fieldState }) => (
+                    <FormItem className="space-y-2.5 group">
+                      <FormLabel className="text-sm font-semibold text-gray-700 block">Password</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-bridgeblue-500/25 to-bridgeblue-600/25 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity duration-300`}></div>
+                          <Input
+                            type="password"
+                            placeholder="Enter your password"
+                            {...field}
+                            className={`relative h-14 sm:h-16 text-base sm:text-lg transition-all duration-300 pl-5 pr-12 rounded-xl border-2 bg-white/70 backdrop-blur-md ${fieldState.invalid 
+                                ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 shadow-lg shadow-red-100/50" 
+                                : "border-gray-200 focus:border-bridgeblue-500 focus:ring-4 focus:ring-bridgeblue-500/15 hover:border-bridgeblue-300 hover:shadow-lg hover:shadow-bridgeblue-100/50"
+                            }`}
+                          />
+                          {field.value && !fieldState.invalid && (
+                            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-sm text-red-600 font-medium flex items-center gap-2 mt-1.5 animate-in fade-in slide-in-from-top-1">
+                        <span className="text-red-500 text-xs">●</span>
+                      </FormMessage>
+                    </FormItem>
+                  )}
+                />
+
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-2 gap-3 sm:gap-0">
+                  <div className="flex items-center">
+                    <input type="checkbox" id="remember" className="w-4 h-4 sm:w-5 sm:h-5 rounded border-gray-300 text-bridgeblue-600 focus:ring-bridgeblue-500" />
+                    <label htmlFor="remember" className="ml-2 text-sm sm:text-base text-gray-600">Remember me</label>
+                  </div>
+                  <Link 
+                    to="/forgot-password" 
+                    className="text-sm sm:text-base font-medium text-bridgeblue-600 hover:text-bridgeblue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-bridgeblue-500 focus:ring-offset-2 rounded px-1"
+                  >
+                    Forgot password?
+                  </Link>
                 </div>
-                <Link 
-                  to="/forgot-password" 
-                  className="text-sm sm:text-base font-medium text-bridgeblue-600 hover:text-bridgeblue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-bridgeblue-500 focus:ring-offset-2 rounded px-1"
+
+                <Button 
+                  type="submit" 
+                  className="w-full h-14 sm:h-16 text-base sm:text-lg font-semibold bg-gradient-to-r from-bridgeblue-500 via-bridgeblue-600 to-bridgeblue-500 hover:from-bridgeblue-600 hover:via-bridgeblue-700 hover:to-bridgeblue-600 text-white shadow-xl shadow-bridgeblue-500/30 hover:shadow-2xl hover:shadow-bridgeblue-500/40 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 rounded-xl relative overflow-hidden group mt-1"
+                  disabled={isSubmitting}
                 >
-                  Forgot password?
-                </Link>
-              </div>
-
-              <Button 
-                type="submit" 
-                className="w-full h-14 sm:h-16 text-base sm:text-lg font-semibold bg-gradient-to-r from-bridgeblue-500 via-bridgeblue-600 to-bridgeblue-500 hover:from-bridgeblue-600 hover:via-bridgeblue-700 hover:to-bridgeblue-600 text-white shadow-xl shadow-bridgeblue-500/30 hover:shadow-2xl hover:shadow-bridgeblue-500/40 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 rounded-xl relative overflow-hidden group mt-1"
-                disabled={isSubmitting}
-              >
-                <span className="relative z-10 flex items-center justify-center">
-                  {isSubmitting && <Loader2 className="mr-2 h-5 w-5 sm:h-6 sm:w-6 animate-spin" />}
-                  {isSubmitting ? "Logging in..." : "Login"}
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </Button>
-            </form>
-
-            {/* Divider */}
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white/80 text-gray-500">Or continue with</span>
-              </div>
-            </div>
+                  <span className="relative z-10 flex items-center justify-center">
+                    {isSubmitting && <Loader2 className="mr-2 h-5 w-5 sm:h-6 sm:w-6 animate-spin" />}
+                    {isSubmitting ? "Logging in..." : "Login"}
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Button>
+              </form>
+            </Form>
 
             {/* Google Auth */}
             <div className="mb-6">

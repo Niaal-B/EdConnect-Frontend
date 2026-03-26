@@ -1,24 +1,30 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import axios from 'axios';
 import api from "@/lib/api";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Loader2, Shield } from "lucide-react";
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '@/stores/authslice';
 import { RootState } from '@/stores/store';
-import { useEffect } from "react";
 import { useAuthVerification } from '../../hooks/useAuthVerification';
 
 // API function for admin login
-const loginAdmin = async (data: {
-  email: string;
-  password: string;
-}) => {
+const loginAdmin = async (data: any) => {
   try {
     const response = await api.post('/admin/login/', data, {
       withCredentials: true,
@@ -32,85 +38,48 @@ const loginAdmin = async (data: {
   }
 };
 
+const adminLoginSchema = z.object({
+  email: z.string()
+    .min(1, "Email is required.")
+    .email("Please enter a valid email."),
+  password: z.string()
+    .min(1, "Password is required.")
+});
+
+type AdminLoginFormValues = z.infer<typeof adminLoginSchema>;
+
 const AdminLoginForm = () => {
   const dispatch = useDispatch();
-  const { isAuthenticated,user } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const checkingSession = useAuthVerification();
+  const { checking } = useAuthVerification();
 
   useEffect(() => {
-    if (!checkingSession) {
-      if (isAuthenticated && user.role=="admin" ) {
+    if (!checking) {
+      if (isAuthenticated && user?.role === "admin") {
         navigate("/admin/dashboard");
       }
     }
-  }, [checkingSession, isAuthenticated, navigate]);
+  }, [checking, isAuthenticated, user, navigate]);
 
-  // Form state
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  // Error state
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-  });
-
-  // Handle input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[name as keyof typeof errors]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ""
-      }));
-    }
-  };
-
-  // Validate form
-  const validateForm = () => {
-    const newErrors = {
+  const form = useForm<AdminLoginFormValues>({
+    resolver: zodResolver(adminLoginSchema),
+    defaultValues: {
       email: "",
       password: "",
-    };
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email.";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required.";
-    }
-
-    setErrors(newErrors);
-    return !newErrors.email && !newErrors.password;
-  };
+    },
+    mode: "onChange",
+  });
 
   // Handle login submission
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-
+  const onSubmit = async (data: AdminLoginFormValues) => {
     try {
       setIsSubmitting(true);
       
       const payload = {
-        email: formData.email,
-        password: formData.password
+        email: data.email,
+        password: data.password
       };
   
       const response = await loginAdmin(payload);
@@ -172,59 +141,61 @@ const AdminLoginForm = () => {
           </CardHeader>
           
           <CardContent className="px-6">
-            <form onSubmit={handleLogin} className="space-y-6">
-              {/* Email field */}
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                  Email Address
-                </label>
-                <Input
-                  id="email"
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                
+                {/* Email field */}
+                <FormField
+                  control={form.control}
                   name="email"
-                  type="email"
-                  placeholder="admin@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`${errors.email ? "border-red-500 focus:border-red-500" : ""} h-11`}
-                  required
+                  render={({ field, fieldState }) => (
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-sm font-medium text-gray-700">Email Address</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="admin@example.com"
+                          {...field}
+                          className={`${fieldState.invalid ? "border-red-500 focus-visible:ring-red-500" : ""} h-11`}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-sm text-red-600" />
+                    </FormItem>
+                  )}
                 />
-                {errors.email && (
-                  <p className="text-sm text-red-600">{errors.email}</p>
-                )}
-              </div>
 
-              {/* Password field */}
-              <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium text-gray-700">
-                  Password
-                </label>
-                <Input
-                  id="password"
+                {/* Password field */}
+                <FormField
+                  control={form.control}
                   name="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className={`${errors.password ? "border-red-500 focus:border-red-500" : ""} h-11`}
-                  required
+                  render={({ field, fieldState }) => (
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-sm font-medium text-gray-700">Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Enter your password"
+                          {...field}
+                          className={`${fieldState.invalid ? "border-red-500 focus-visible:ring-red-500" : ""} h-11`}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-sm text-red-600" />
+                    </FormItem>
+                  )}
                 />
-                {errors.password && (
-                  <p className="text-sm text-red-600">{errors.password}</p>
-                )}
-              </div>
-
-             
-              {/* Submit button */}
-              <Button 
-                type="submit" 
-                className="w-full h-11 text-base font-medium"
-                disabled={isSubmitting}
-                size="lg"
-              >
-                {isSubmitting && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                {isSubmitting ? "Signing in..." : "Sign In"}
-              </Button>
-            </form>
+               
+                {/* Submit button */}
+                <Button 
+                  type="submit" 
+                  className="w-full h-11 text-base font-medium"
+                  disabled={isSubmitting}
+                  size="lg"
+                >
+                  {isSubmitting && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+                  {isSubmitting ? "Signing in..." : "Sign In"}
+                </Button>
+              </form>
+            </Form>
           </CardContent>
           
           <CardFooter className="px-6 py-4 bg-gray-50 rounded-b-lg">

@@ -407,6 +407,30 @@ const MyMentors = () => {
           )}
         </div>
       </div>
+
+      {/* Modals */}
+      {selectedMentor && (
+        <>
+          <MentorProfileModal
+            mentor={selectedMentor}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onBookSession={() => {
+              setIsModalOpen(false);
+              setIsBookingModalOpen(true);
+            }}
+          />
+          
+          <SlotBookingModal
+            mentor={selectedMentor}
+            isOpen={isBookingModalOpen}
+            onClose={() => setIsBookingModalOpen(false)}
+            onConfirm={handleConfirmBooking}
+            isLoading={isBookingLoading}
+            bookingError={bookingError}
+          />
+        </>
+      )}
     </div>
   );
 };
