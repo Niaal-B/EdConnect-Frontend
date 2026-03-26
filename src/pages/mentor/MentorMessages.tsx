@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { MessageCircle, Wifi, WifiOff } from 'lucide-react';
@@ -8,34 +8,34 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import MentorDashboardLayout from '@/components/MentorDashboardLayout';
-import api from '@/lib/api'; 
+import api from '@/lib/api';
 import { useSelector } from 'react-redux';
-import { RootState } from '../stores/store';
+import { RootState } from '@/stores/store';
 
 import { ChatArea } from '@/components/ChatArea';
-import { StudentSidebar } from '@/components/mentors/StudentSidebar'; 
+import { StudentSidebar } from '@/components/mentors/StudentSidebar';
 
 interface StudentInfo {
-  id: number; 
+  id: number;
   full_name: string;
-  profile_picture?: string | null; 
+  profile_picture?: string | null;
   email: string;
 }
 
 interface ConnectedStudent {
   id: number;
-  chat_room_id: string; 
+  chat_room_id: string;
   student_info: StudentInfo;
 }
 
 // UPDATED: Added file_url and file_type to match backend API response
 interface Message {
-  id: number; 
+  id: number;
   content: string | null;  // Changed to allow null for file messages
-  sender_id: number; 
+  sender_id: number;
   sender_username: string;
-  timestamp: string; 
-  chat_room_id: string; 
+  timestamp: string;
+  chat_room_id: string;
   file_url?: string;      // Will be mapped from backend 'file' field
   file_type?: string;     // Matches backend field name
 }
@@ -44,19 +44,19 @@ const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
 const BACKEND_WEBSOCKET_HOST = import.meta.env.VITE_BACKEND_WEBSOCKET_HOST;
 
 const MentorMessages = () => {
-  const {user } = useSelector((state: RootState) => state.auth);
-  const currentUserId = user.id; 
+  const { user } = useSelector((state: RootState) => state.auth);
+  const currentUserId = user.id;
 
   const [selectedChatRoomId, setSelectedChatRoomId] = useState<string | null>(null);
   const [selectedStudentName, setSelectedStudentName] = useState<string>('');
-  const [messages, setMessages] = useState<Message[]>([]); 
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionError, setConnectionError] = useState<string>('');
   const [connectedStudents, setConnectedStudents] = useState<ConnectedStudent[]>([]);
   const [isLoadingStudents, setIsLoadingStudents] = useState(true);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
 
-  const ws = useRef<WebSocket | null>(null); 
+  const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     const loadStudents = async () => {
@@ -66,7 +66,7 @@ const MentorMessages = () => {
         return;
       }
       setIsLoadingStudents(true);
-      setConnectionError(''); 
+      setConnectionError('');
       try {
         const response = await api.get<{ results: ConnectedStudent[] }>(`/connections/my-students/`);
         setConnectedStudents(response.data.results);
@@ -79,7 +79,7 @@ const MentorMessages = () => {
     };
 
     loadStudents();
-  }, [currentUserId]); 
+  }, [currentUserId]);
 
   useEffect(() => {
     if (ws.current) {
@@ -129,7 +129,7 @@ const MentorMessages = () => {
     ws.current.onopen = () => {
       console.log('WebSocket connected successfully!');
       setIsConnected(true);
-      setConnectionError(''); 
+      setConnectionError('');
     };
 
     ws.current.onmessage = (event) => {
@@ -164,14 +164,14 @@ const MentorMessages = () => {
           }
         }, 3000);
       } else {
-        setConnectionError('Disconnected.'); 
+        setConnectionError('Disconnected.');
       }
     };
 
     ws.current.onerror = (err) => {
       console.error('WebSocket error:', err);
       setConnectionError('WebSocket error. Check console for details. Attempting to reconnect...');
-      ws.current?.close(); 
+      ws.current?.close();
     };
 
     return () => {
@@ -180,14 +180,14 @@ const MentorMessages = () => {
         ws.current.close();
       }
     };
-  }, [selectedChatRoomId, currentUserId]); 
+  }, [selectedChatRoomId, currentUserId]);
 
   const handleStudentSelect = (student: ConnectedStudent) => {
     if (selectedChatRoomId !== student.chat_room_id) {
       setSelectedChatRoomId(student.chat_room_id);
       setSelectedStudentName(student.student_info.full_name);
       setMessages([]);
-      setConnectionError(''); 
+      setConnectionError('');
     }
   };
 
@@ -225,7 +225,7 @@ const MentorMessages = () => {
   if (isLoadingStudents) {
     return (
       <MentorDashboardLayout>
-        <div className="flex justify-center items-center h-screen w-full bg-gray-100">
+        <div className="flex justify-center items-center h-[calc(100vh-120px)] w-full bg-gray-50/50 rounded-2xl">
           <div className="text-lg text-gray-600">Loading messages...</div>
         </div>
       </MentorDashboardLayout>
@@ -235,7 +235,7 @@ const MentorMessages = () => {
   if (!currentUserId) {
     return (
       <MentorDashboardLayout>
-        <div className="flex justify-center items-center h-screen w-full bg-gray-100">
+        <div className="flex justify-center items-center h-[calc(100vh-120px)] w-full bg-gray-50/50 rounded-2xl">
           <div className="text-lg text-gray-600">Please log in to view messages. (User ID not found)</div>
         </div>
       </MentorDashboardLayout>
@@ -244,8 +244,8 @@ const MentorMessages = () => {
 
   return (
     <MentorDashboardLayout>
-      <div className="h-screen bg-gray-100 font-['Inter']">
-        <div className="flex h-full">
+      <div className="max-w-[1600px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 h-[calc(100vh-80px)]">
+        <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100/60 overflow-hidden flex h-full">
           <StudentSidebar
             students={connectedStudents}
             isLoading={isLoadingStudents}
@@ -253,15 +253,17 @@ const MentorMessages = () => {
             onStudentSelect={handleStudentSelect}
           />
 
-          <ChatArea
-            selectedMentorName={selectedStudentName}
-            messages={messages}
-            isConnected={isConnected}
-            isLoadingHistory={isLoadingHistory}
-            connectionError={connectionError}
-            currentUserId={currentUserId}
-            onSendMessage={handleSendMessage}
-          />
+          <div className="flex-1 flex flex-col min-w-0 bg-[#F8FAFC]">
+            <ChatArea
+              selectedMentorName={selectedStudentName}
+              messages={messages}
+              isConnected={isConnected}
+              isLoadingHistory={isLoadingHistory}
+              connectionError={connectionError}
+              currentUserId={currentUserId}
+              onSendMessage={handleSendMessage}
+            />
+          </div>
         </div>
       </div>
     </MentorDashboardLayout>
