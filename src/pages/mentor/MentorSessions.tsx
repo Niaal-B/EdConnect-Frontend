@@ -532,11 +532,9 @@ const MentorSessions = () => {
     const isCancellable = session.status === 'CONFIRMED' && new Date(session.booked_start_time) > new Date();
     const sessionStartTime = new Date(session.booked_start_time);
     const now = new Date();
-    // Allow joining from 5 minutes before start until session ends
-    const isSessionActive =
-      session.status === 'CONFIRMED' &&
-      now >= new Date(sessionStartTime.getTime() - 5 * 60 * 1000) &&
-      now <= new Date(session.booked_end_time);
+    // TODO: Restore time-based check after testing:
+    // const isSessionActive = session.status === 'CONFIRMED' && now >= new Date(sessionStartTime.getTime() - 5 * 60 * 1000) && now <= new Date(session.booked_end_time);
+    const isSessionActive = session.status === 'CONFIRMED'; // TESTING MODE: always show join button
     return (
       <Card className="transition-all duration-200 hover:shadow-lg">
         <CardHeader className="pb-4">

@@ -662,11 +662,9 @@ const Schedule = () => {
       
     const sessionStartTime = new Date(booking.booked_start_time);
     const now = new Date();
-    // Allow joining from 5 minutes before start until session ends
-    const isSessionActive =
-      booking.status === 'CONFIRMED' &&
-      now >= new Date(sessionStartTime.getTime() - 5 * 60 * 1000) &&
-      now <= new Date(booking.booked_end_time);
+    // TODO: Restore time-based check after testing:
+    // const isSessionActive = booking.status === 'CONFIRMED' && now >= new Date(sessionStartTime.getTime() - 5 * 60 * 1000) && now <= new Date(booking.booked_end_time);
+    const isSessionActive = booking.status === 'CONFIRMED'; // TESTING MODE: always show join button
       
     const showFeedbackButton = shouldShowFeedbackButton(booking);
 
