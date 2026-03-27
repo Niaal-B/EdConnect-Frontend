@@ -112,9 +112,7 @@ interface BookedSessionsResponse {
 }
 
 interface ActiveCallDetails {
-  roomId: string;
-  userId: string;
-  userName: string;
+  bookingId: string;
 }
 
 interface PaginationInfo {
@@ -416,20 +414,9 @@ const MentorSessions = () => {
   };
 
   const handleJoinCall = (session: BookedSession) => {
-    const roomId = session.id;
-    if (currentUser) {
-      setActiveCallDetails({
-        roomId,
-        userId: String(currentUser.id),
-        userName: currentUser.username,
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: "User session not found. Please log in again.",
-        variant: "destructive",
-      });
-    }
+    setActiveCallDetails({
+      bookingId: session.id,
+    });
   };
 
   // Pagination component for a specific status
@@ -545,10 +532,11 @@ const MentorSessions = () => {
     const isCancellable = session.status === 'CONFIRMED' && new Date(session.booked_start_time) > new Date();
     const sessionStartTime = new Date(session.booked_start_time);
     const now = new Date();
-    const isSessionActive = 
-        session.status === 'CONFIRMED' &&
-        now <= new Date(sessionStartTime.getTime() - 10 * 60000) &&
-        now <= new Date(session.booked_end_time);
+    // Allow joining from 5 minutes before start until session ends
+    const isSessionActive =
+      session.status === 'CONFIRMED' &&
+      now >= new Date(sessionStartTime.getTime() - 5 * 60 * 1000) &&
+      now <= new Date(session.booked_end_time);
     return (
       <Card className="transition-all duration-200 hover:shadow-lg">
         <CardHeader className="pb-4">
@@ -659,10 +647,9 @@ const MentorSessions = () => {
 
   if (activeCallDetails) {
     return (
-      <ZegoVideoCall 
-        roomId={activeCallDetails.roomId}
-        userId={activeCallDetails.userId}
-        userName={activeCallDetails.userName}
+      <ZegoVideoCall
+        bookingId={activeCallDetails.bookingId}
+        onCallEnd={() => setActiveCallDetails(null)}
       />
     );
   }

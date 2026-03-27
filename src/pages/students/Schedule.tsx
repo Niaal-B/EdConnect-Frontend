@@ -126,9 +126,7 @@ interface UserData {
 }
 
 interface ActiveCallDetails {
-  roomId: string;
-  userId: string;
-  userName: string;
+  bookingId: string;
 }
 
 interface PaginationInfo {
@@ -511,20 +509,9 @@ const Schedule = () => {
   };
 
   const handleJoinCall = (booking) => {
-    const roomId = booking.id;
-    if (currentUser) {
-      setActiveCallDetails({
-        roomId,
-        userId: String(currentUser.id),
-        userName: currentUser.username,
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: "User session not found. Please log in again.",
-        variant: "destructive",
-      });
-    }
+    setActiveCallDetails({
+      bookingId: booking.id,
+    });
   };
 
   // Handle feedback submission callback
@@ -675,9 +662,10 @@ const Schedule = () => {
       
     const sessionStartTime = new Date(booking.booked_start_time);
     const now = new Date();
-    const isSessionActive = 
-      booking.status === 'CONFIRMED'&&
-      now <= new Date(sessionStartTime.getTime() - 10 * 60000) &&
+    // Allow joining from 5 minutes before start until session ends
+    const isSessionActive =
+      booking.status === 'CONFIRMED' &&
+      now >= new Date(sessionStartTime.getTime() - 5 * 60 * 1000) &&
       now <= new Date(booking.booked_end_time);
       
     const showFeedbackButton = shouldShowFeedbackButton(booking);
@@ -858,10 +846,9 @@ const Schedule = () => {
 
   if (activeCallDetails) {
     return (
-      <ZegoVideoCall 
-        roomId={activeCallDetails.roomId}
-        userId={activeCallDetails.userId}
-        userName={activeCallDetails.userName}
+      <ZegoVideoCall
+        bookingId={activeCallDetails.bookingId}
+        onCallEnd={() => setActiveCallDetails(null)}
       />
     );
   }
