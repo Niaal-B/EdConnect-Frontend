@@ -29,10 +29,20 @@ const ZegoVideoCall: React.FC<ZegoVideoCallProps> = ({ bookingId, onCallEnd }) =
                     booking_id: bookingId,
                 });
 
-                const { token, user_name } = response.data;
+                const { token, app_id, user_id, room_id, user_name } = response.data;
+
+                // generateKitTokenForProduction wraps the backend's Token04 into a Kit Token
+                // This is the required production flow — never expose the server secret to the frontend
+                const kitToken = ZegoUIKitPrebuilt.generateKitTokenForProduction(
+                    Number(app_id),
+                    token,
+                    String(room_id),
+                    String(user_id),
+                    String(user_name),
+                );
 
                 // 2. Create the Zego instance
-                const zc = ZegoUIKitPrebuilt.create(token);
+                const zc = ZegoUIKitPrebuilt.create(kitToken);
                 zegoRef.current = zc;
 
                 // 3. Mark as ready — React will re-render, mounting the container div
