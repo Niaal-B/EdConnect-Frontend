@@ -40,14 +40,11 @@ const AdminDashboard: React.FC = () => {
   const { isAuthenticated,user } = useSelector((state: RootState) => state.auth);
   const checkingSession = useAuthVerification();
   const navigate = useNavigate()
-  console.log(user);
   
   
   
     useEffect(() => {
-      console.log(checkingSession)
       if(user.role!="admin"){
-        console.log(user)
         navigate("/admin/login")
       }
    

@@ -35,21 +35,18 @@ const ChatTest: React.FC<ChatTestProps> = ({ chatRoomId, currentUserId }) => {
 
     // WebSocket event listeners
     ws.current.onopen = () => {
-      console.log('WebSocket connection opened:', WS_BASE_URL);
       // You could send an initial message or fetch history here
     };
 
     ws.current.onmessage = (event) => {
       // Parse the incoming JSON message
       const receivedMessage: ChatMessage = JSON.parse(event.data);
-      console.log('Message received:', receivedMessage);
 
       // Add the new message to the state
       setMessages((prevMessages) => [...prevMessages, receivedMessage]);
     };
 
     ws.current.onclose = (event) => {
-      console.log('WebSocket connection closed:', event.code, event.reason);
       // Handle different close codes (e.g., 4001 for auth failure)
       if (event.code === 4001) {
         alert('Authentication failed. Please log in.');
@@ -62,14 +59,12 @@ const ChatTest: React.FC<ChatTestProps> = ({ chatRoomId, currentUserId }) => {
     };
 
     ws.current.onerror = (error) => {
-      console.error('WebSocket error:', error);
     };
 
     // Cleanup function: Close WebSocket when component unmounts
     return () => {
       if (ws.current && ws.current.readyState === WebSocket.OPEN) {
         ws.current.close();
-        console.log('WebSocket connection closed on unmount.');
       }
     };
   }, [chatRoomId]); // Re-run effect if chatRoomId changes
@@ -88,7 +83,6 @@ const ChatTest: React.FC<ChatTestProps> = ({ chatRoomId, currentUserId }) => {
       ws.current.send(JSON.stringify({ message: inputMessage }));
       setInputMessage(''); // Clear input field
     } else {
-      console.warn('WebSocket is not open. Message not sent.');
       // Optionally, show a user-friendly message
     }
   };

@@ -52,7 +52,6 @@ const MentorEarnings = () => {
     try {
       setLoading(true);
       const response = await api.get('/mentors/stripe/onboard/');
-      console.log('Stripe Status Response:', response.data);
       setStripeStatus(response.data);
       return response.data.payouts_enabled && response.data.charges_enabled;
     } catch (error: any) {
@@ -73,7 +72,6 @@ const MentorEarnings = () => {
     try {
       setEarningsLoading(true);
       const response = await api.get('/mentors/earnings/');
-      console.log('Earnings Data Response:', response.data);
       setEarningsData(response.data);
     } catch (error: any) {
       console.error('Error fetching earnings data:', error);
@@ -92,7 +90,6 @@ const MentorEarnings = () => {
     try {
       setOnboardingLoading(true);
       const response = await api.post('/mentors/stripe/onboard/', {});
-      console.log(response);
       window.open(response.data.url, '_blank');
       toast({
         title: "Redirecting to Stripe",

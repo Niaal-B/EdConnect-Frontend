@@ -70,7 +70,6 @@ export const RejectedApplications = ({ refreshKey, onActionComplete }: Props) =>
   const handleReject = async (mentorId: string, reason: string) => {
     try {
       setProcessing(`reject-${mentorId}`);
-      console.log(reason, "this is the reason before calling the function");
       await rejectMentor(mentorId, reason);
       toast({
         title: 'Success',

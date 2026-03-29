@@ -80,7 +80,6 @@ export const SessionsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
   
   const rateMentor = (sessionId: string) => {
-    console.log(`Rating mentor for session: ${sessionId}`);
     // Implementation would open rating modal or navigate to rating page
   };
   

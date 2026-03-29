@@ -83,7 +83,6 @@ const MentorMessages = () => {
 
   useEffect(() => {
     if (ws.current) {
-      console.log('Closing existing WebSocket connection.');
       ws.current.close();
       ws.current = null;
       setIsConnected(false);
@@ -127,14 +126,12 @@ const MentorMessages = () => {
     ws.current = new WebSocket(WEBSOCKET_URL);
 
     ws.current.onopen = () => {
-      console.log('WebSocket connected successfully!');
       setIsConnected(true);
       setConnectionError('');
     };
 
     ws.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log('Message received:', data);
 
       if (data.type === 'chat_message') {
         const receivedMessage: Message = {
@@ -154,13 +151,11 @@ const MentorMessages = () => {
     };
 
     ws.current.onclose = (event) => {
-      console.log('WebSocket disconnected:', event);
       setIsConnected(false);
       if (!event.wasClean) {
         setConnectionError('Disconnected. Attempting to reconnect in 3 seconds...');
         setTimeout(() => {
           if (selectedChatRoomId) {
-            console.log('Attempting WebSocket reconnect...');
           }
         }, 3000);
       } else {
@@ -176,7 +171,6 @@ const MentorMessages = () => {
 
     return () => {
       if (ws.current) {
-        console.log('Cleaning up WebSocket connection.');
         ws.current.close();
       }
     };
@@ -214,7 +208,6 @@ const MentorMessages = () => {
           message: content.trim(),
         };
         ws.current.send(JSON.stringify(messageData));
-        console.log('Message sent via WebSocket:', messageData.message);
       }
     } else {
       setConnectionError('Not connected to chat. Please wait or refresh the page.');

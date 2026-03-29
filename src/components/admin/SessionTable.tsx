@@ -166,11 +166,9 @@ export const SessionTable = ({ filterType, searchQuery, filters }: SessionTableP
   };
 
   const handleCancelSession = (sessionId: string) => {
-    console.log('Canceling session:', sessionId);
   };
 
   const handleRefundSession = (sessionId: string) => {
-    console.log('Processing refund for session:', sessionId);
   };
 
   if (loading) {

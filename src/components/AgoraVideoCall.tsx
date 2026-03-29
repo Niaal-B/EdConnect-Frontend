@@ -61,7 +61,6 @@ const AgoraVideoCall: React.FC<AgoraVideoCallProps> = ({ sessionId, currentUser 
         setAppId(data.appId);
         setUid(data.uid);
       } catch (e) {
-        console.error("Error fetching Agora token:", e);
       }
     };
     fetchToken();
@@ -72,9 +71,7 @@ const AgoraVideoCall: React.FC<AgoraVideoCallProps> = ({ sessionId, currentUser 
     
     const createTracks = async () => {
       try {
-        console.log("🎬 Creating tracks...");
         const [audioTrack, videoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks();
-        console.log("✅ Tracks created successfully");
         setLocalTracks([audioTrack, videoTrack]);
       } catch (error) {
         console.error("❌ Failed to create tracks:", error);
@@ -89,7 +86,6 @@ const AgoraVideoCall: React.FC<AgoraVideoCallProps> = ({ sessionId, currentUser 
   useEffect(() => {
     if (localTracks && localVideoRef.current) {
       const [, videoTrack] = localTracks;
-      console.log("🎥 Setting up local video");
       
       try {
         // Clear the container first
@@ -97,7 +93,6 @@ const AgoraVideoCall: React.FC<AgoraVideoCallProps> = ({ sessionId, currentUser 
         
         // Play directly to the container - Agora will create the video element
         videoTrack.play(localVideoRef.current);
-        console.log("✅ Local video playing to container");
         
         // Add styling to any video elements that get created
         setTimeout(() => {
@@ -108,7 +103,6 @@ const AgoraVideoCall: React.FC<AgoraVideoCallProps> = ({ sessionId, currentUser 
             video.style.objectFit = 'cover';
             video.style.transform = 'scaleX(-1)'; // Mirror effect
             video.muted = true;
-            console.log("✅ Applied styles to local video element");
           });
         }, 100);
       } catch (error) {
@@ -127,7 +121,6 @@ const AgoraVideoCall: React.FC<AgoraVideoCallProps> = ({ sessionId, currentUser 
       if (!client.current) return;
 
       client.current.on('user-published', async (user, mediaType) => {
-        console.log('👥 User published:', user.uid, mediaType);
         await client.current!.subscribe(user, mediaType);
         
         if (mediaType === 'video') {
@@ -146,21 +139,17 @@ const AgoraVideoCall: React.FC<AgoraVideoCallProps> = ({ sessionId, currentUser 
       });
       
       client.current.on('user-unpublished', (user, type) => {
-        console.log('👥 User unpublished:', user.uid, type);
       });
       
       client.current.on('user-left', (user) => {
-        console.log('👥 User left:', user.uid);
         setRemoteUsers(prevUsers => prevUsers.filter(u => u.uid !== user.uid));
       });
 
       try {
         await client.current.join(appId, sessionId, token, uid);
         await client.current.publish(localTracks);
-        console.log("✅ Joined channel and published tracks");
         setIsCallReady(true);
       } catch (error) {
-        console.error("❌ Failed to join channel:", error);
       }
     };
 
@@ -183,7 +172,6 @@ const AgoraVideoCall: React.FC<AgoraVideoCallProps> = ({ sessionId, currentUser 
     if (remoteUsers.length > 0 && remoteVideoRef.current) {
       const remoteUser = remoteUsers[0];
       if (remoteUser.videoTrack) {
-        console.log("🎥 Playing remote video");
         remoteUser.videoTrack.play(remoteVideoRef.current);
       }
     }
@@ -209,7 +197,6 @@ const AgoraVideoCall: React.FC<AgoraVideoCallProps> = ({ sessionId, currentUser 
       
       await videoTrack.setEnabled(!newMutedState);
       setIsVideoMuted(newMutedState);
-      console.log(`🎥 Video ${newMutedState ? 'muted' : 'unmuted'}`);
       
       // If unmuting, we need to re-setup the video element
       if (!newMutedState && localVideoRef.current) {
@@ -227,9 +214,7 @@ const AgoraVideoCall: React.FC<AgoraVideoCallProps> = ({ sessionId, currentUser 
             
             localVideoRef.current!.appendChild(videoElement);
             videoTrack.play(videoElement);
-            console.log("🎥 Re-rendered local video after toggle");
           } catch (error) {
-            console.error("❌ Error re-rendering local video:", error);
           }
         }, 100);
       }
@@ -243,7 +228,6 @@ const AgoraVideoCall: React.FC<AgoraVideoCallProps> = ({ sessionId, currentUser 
       
       await audioTrack.setEnabled(!newMutedState);
       setIsAudioMuted(newMutedState);
-      console.log(`🎤 Audio ${newMutedState ? 'muted' : 'unmuted'}`);
     }
   };
   

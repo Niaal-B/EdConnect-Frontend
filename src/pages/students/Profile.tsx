@@ -37,7 +37,6 @@ const Profile = () => {
       try {
         const data = await getStudentProfile();
         setProfile(data);
-        console.log(data)
       } catch (error) {
         toast({
           title: 'Error',
@@ -143,7 +142,6 @@ const Profile = () => {
     setIsSaving(true);
     try {
       const { id, user, profile_picture, ...profileData } = profile;
-      console.log(profileData)
       const dataToSend = {
         ...profileData,
         education_level: Array.isArray(profile.education_level) 

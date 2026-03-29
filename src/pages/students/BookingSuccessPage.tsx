@@ -8,7 +8,6 @@ const BookingSuccessPage = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const sessionId = queryParams.get('session_id');
-    console.log(sessionId)
 
     const [bookingDetails, setBookingDetails] = useState<any>(null); // State to store fetched booking details
     const [loading, setLoading] = useState(true);

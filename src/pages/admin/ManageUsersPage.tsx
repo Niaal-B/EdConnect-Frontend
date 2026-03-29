@@ -87,9 +87,6 @@ const ManageUsersPage: React.FC = () => {
         setAllStudents(students);
         setAllMentors(mentors);
         
-        console.log('Students loaded:', students);
-        console.log('Mentors loaded:', mentors);
-        
       } catch (err: any) {
         console.error('Failed to fetch users:', err);
         setError('Failed to load users');
@@ -109,7 +106,6 @@ const ManageUsersPage: React.FC = () => {
   };
 
   const handleViewProfile = (user: any) => {
-    console.log('Selected user for modal:', user);
     setSelectedUser(user);
     setIsModalOpen(true);
   };

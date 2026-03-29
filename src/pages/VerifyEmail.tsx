@@ -18,8 +18,6 @@ export const VerifyEmail = () => {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        console.log('Making verification request...');
-        
         const response = await api.post(
           `/user/verify-email/${token}/`,
           {}, 
@@ -28,20 +26,10 @@ export const VerifyEmail = () => {
           }
         );
         
-        console.log('Response status:', response.status);
-        console.log('Response headers:', response.headers);
-        
         if (response.status === 201) {
           setIsSuccess(true);
           
-          console.log('Cookies immediately after response:', document.cookie);
-          setTimeout(() => {
-            console.log('Cookies after 100ms delay:', document.cookie);
-            const hasAccessToken = document.cookie.includes('access_token');
-            const hasRefreshToken = document.cookie.includes('refresh_token');
-            console.log('Access token stored:', hasAccessToken);
-            console.log('Refresh token stored:', hasRefreshToken);
-          }, 100);
+          setIsSuccess(true);
           
           toast({
             title: "Email Verified",

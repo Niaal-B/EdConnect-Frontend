@@ -45,7 +45,6 @@ export const NotificationsMenu = () => {
       setNotifications(res.data.results);
       setUnreadCount(res.data.filter((n: Notification) => !n.is_read).length);
     } catch (err) {
-      console.error("Failed to load notifications", err);
     }
   };
 
@@ -59,7 +58,6 @@ export const NotificationsMenu = () => {
 
 
     ws.current.onmessage = (event) => {
-      console.log(event);
       const data = JSON.parse(event.data);
       if (data.type === "notification") {
         const newNotification = data.notification;
@@ -80,7 +78,6 @@ export const NotificationsMenu = () => {
     };
 
     ws.current.onerror = (err) => {
-      console.error("WebSocket error:", err);
     };
 
     return () => {

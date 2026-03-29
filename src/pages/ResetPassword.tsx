@@ -33,7 +33,6 @@ const formSchema = z.object({
 
 export default function ResetPassword() {
   const { uidb64, token } = useParams<{ uidb64: string; token: string }>();
-  console.log(uidb64,token)
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);

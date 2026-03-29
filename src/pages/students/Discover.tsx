@@ -222,7 +222,6 @@
         const result = await discoverMentorApi.getMentors(params)
         setData(result)
       } catch (err) {
-        console.log(err,"this is the error")
         const errorMessage = err instanceof Error ? err.message : "Failed to fetch mentors"
         setError(errorMessage)
       } finally {

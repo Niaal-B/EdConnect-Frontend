@@ -57,7 +57,6 @@ api.interceptors.response.use(
         
         if (!authPages.includes(currentPath)) {
           const redirectUrl = getRedirectUrl(currentPath);
-          console.log('Redirecting to:', redirectUrl);
           window.location.href = redirectUrl;
         }
         
@@ -120,7 +119,6 @@ export const approveMentor = async (mentorId: string) => {
 };
 
 export const rejectMentor = async (mentorId: string, reason?: string) => {
-  console.log(reason,"This is the reason")
   const response = await api.patch(
     `admin/mentors/${mentorId}/approve-reject/`,
     { action:'reject', reason },
@@ -259,14 +257,10 @@ export const discoverMentorApi = {
         cleanParams.search = params.search.trim();
       }
 
-      console.log('API Request params:', cleanParams);
-
       const response = await api.get<MentorApiResponse>(
         `/mentors/mentors/public/`,
         { params: cleanParams }
       );
-
-      console.log('API Response:', response.data);
 
       // Handle both response formats (new format with success/mentors/total and old format with results/count)
       if (response.data.success !== undefined) {
@@ -335,7 +329,6 @@ export const getStudentProfile = async (): Promise<StudentProfile> => {
 
 export const updateStudentProfile = async (data: Partial<StudentProfile>) => {
   const { user, profile_picture,...profileData } = data;
-  console.log(profileData)
   const response = await api.patch(
     `students/profile/`,
     profileData,

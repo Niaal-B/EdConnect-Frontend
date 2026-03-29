@@ -14,9 +14,6 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen, isActive }: SidebarProps)
   const { user } = useSelector((state: RootState) => state.auth);
 
   const handleNavItemClick = (itemId: string) => {
-    if (itemId === 'set-availability') {
-      console.log('Set Availability clicked from sidebar');
-    }
   };
 
   const filteredNavItems = navItems.filter((item) => {

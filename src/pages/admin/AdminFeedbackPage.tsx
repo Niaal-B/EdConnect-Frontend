@@ -64,7 +64,6 @@ const AdminFeedbackPage: React.FC = () => {
     try {
       setLoading(true);
       const response = await api.get('/admin/feedback/mentors/');
-      console.log(response)
       setFeedbackData(response.data.results || []);
     } catch (error) {
       console.error('Error fetching feedback:', error);

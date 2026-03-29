@@ -22,7 +22,6 @@ export const useAuthVerification = () => {
         const res = await api.get('/auth/check-session');
         if (res.data.valid) {
           setUser(res.data.user);        
-          console.log(res.data.user,"this is user in userverif")
           dispatch(loginSuccess(res.data.user));
         } else {
           setUser(null);

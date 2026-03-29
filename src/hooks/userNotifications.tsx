@@ -58,7 +58,6 @@ export const useNotifications = () => {
       wsRef.current = new WebSocket(wsUrl);
 
       wsRef.current.onopen = () => {
-        console.log('WebSocket connected');
         setIsConnected(true);
       };
 
@@ -78,7 +77,6 @@ export const useNotifications = () => {
       };
 
       wsRef.current.onclose = () => {
-        console.log('WebSocket disconnected');
         setIsConnected(false);
         // Attempt to reconnect after 3 seconds
         setTimeout(connectWebSocket, 3000);

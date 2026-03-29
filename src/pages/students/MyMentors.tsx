@@ -123,7 +123,6 @@ const MyMentors = () => {
       })
 
       if (response.status === 201) {
-        console.log("Booking initiated successfully:", response.data);
         const stripeCheckoutUrl = response.data.stripe_checkout_url;
         window.location.href = stripeCheckoutUrl;
       }else {
@@ -133,8 +132,6 @@ const MyMentors = () => {
       setIsBookingModalOpen(false)
       fetchMentors() // Refresh the list
     } catch (err: any) {
-
-      console.log("error intiting booking ",err)
       let errorMessage = "Failed to initiate booking. Please try again.";
       if (err.response && err.response.data && err.response.data.detail) {
         errorMessage = err.response.data.detail;

@@ -67,13 +67,6 @@ const AvailabilityDialog: React.FC<AvailabilityDialogProps> = ({ open, onClose }
 
     // In a real app, this would save to the database
     toast.success(`Availability set for ${selectedDays.length} day(s)`);
-    
-    console.log("Saving availability:", {
-      days: selectedDays,
-      startTime,
-      endTime
-    });
-    
     onClose();
   };
 

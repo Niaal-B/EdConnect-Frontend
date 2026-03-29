@@ -104,7 +104,6 @@ const MentorSignup = () => {
 
       navigate("/check-email");
     } catch (error) {
-      console.log("Registration error:", error);
       let errorMessage = "An unexpected error occurred during registration";
       let hasFieldErrors = false;
 
