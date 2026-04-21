@@ -36,7 +36,10 @@ export const StudentSidebar: React.FC<StudentSidebarProps> = ({
   );
 
   return (
-    <aside className="w-[320px] bg-white flex flex-col border-r border-gray-100/80 shadow-[2px_0_8px_-4px_rgba(0,0,0,0.05)] z-10 hidden md:flex h-full rounded-l-2xl overflow-hidden">
+    <aside className={cn(
+      "bg-white flex flex-col border-r border-gray-100/80 shadow-[2px_0_8px_-4px_rgba(0,0,0,0.05)] z-10 h-full rounded-l-2xl overflow-hidden",
+      selectedChatRoomId ? "hidden md:flex md:w-[320px]" : "flex w-full md:w-[320px]"
+    )}>
       <div className="p-5 border-b border-gray-100 bg-white/60 backdrop-blur-xl z-10 sticky top-0">
         <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 mb-5 tracking-tight">Messages</h2>
         <div className="relative group">

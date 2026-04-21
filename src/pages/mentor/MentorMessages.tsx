@@ -11,6 +11,7 @@ import MentorDashboardLayout from '@/components/MentorDashboardLayout';
 import api from '@/lib/api';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores/store';
+import { cn } from '@/lib/utils';
 
 import { ChatArea } from '@/components/ChatArea';
 import { StudentSidebar } from '@/components/mentors/StudentSidebar';
@@ -246,7 +247,10 @@ const MentorMessages = () => {
             onStudentSelect={handleStudentSelect}
           />
 
-          <div className="flex-1 flex flex-col min-w-0 bg-[#F8FAFC]">
+          <div className={cn(
+            "flex-1 flex flex-col min-w-0 bg-[#F8FAFC]",
+            !selectedChatRoomId && "hidden md:flex"
+          )}>
             <ChatArea
               selectedMentorName={selectedStudentName}
               messages={messages}
@@ -255,6 +259,7 @@ const MentorMessages = () => {
               connectionError={connectionError}
               currentUserId={currentUserId}
               onSendMessage={handleSendMessage}
+              onBack={() => setSelectedChatRoomId(null)}
             />
           </div>
         </div>

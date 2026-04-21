@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Paperclip, Send, MessageCircle } from 'lucide-react';
+import { Paperclip, Send, MessageCircle, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Message {
@@ -25,6 +25,7 @@ interface ChatAreaProps {
   connectionError: string;
   currentUserId: number;
   onSendMessage: (content: string, file?: File) => void;
+  onBack?: () => void;
 }
 
 export function ChatArea({
@@ -34,7 +35,8 @@ export function ChatArea({
   isLoadingHistory,
   connectionError,
   currentUserId,
-  onSendMessage
+  onSendMessage,
+  onBack
 }: ChatAreaProps) {
   const [inputValue, setInputValue] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -153,6 +155,15 @@ export function ChatArea({
       <div className="bg-white/90 backdrop-blur-md shadow-sm p-4 px-6 border-b border-gray-100 z-10 sticky top-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="md:hidden p-2 -ml-2 rounded-full text-gray-500 hover:bg-gray-100 transition-colors"
+                aria-label="Back to contacts"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+            )}
             <Avatar className="h-10 w-10 ring-2 ring-blue-50/50 shadow-sm">
               <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-medium">
                 {selectedMentorName.charAt(0).toUpperCase()}
