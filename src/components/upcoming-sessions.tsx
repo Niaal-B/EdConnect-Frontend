@@ -25,7 +25,7 @@ const sessions = [
   {
     id: 3,
     date: { day: "22", month: "DEC" },
-    title: "University Selection",
+    title: "Project Planning",
     mentor: "Emma Davis",
     mentorInitials: "ED",
     time: "4:00 PM",
@@ -69,4 +69,3 @@ export function UpcomingSessions() {
     </Card>
   );
 }
-

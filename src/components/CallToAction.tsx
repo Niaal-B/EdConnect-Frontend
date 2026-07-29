@@ -16,10 +16,10 @@ const CallToAction = () => {
         <div className="max-w-4xl mx-auto text-center space-y-6 sm:space-y-8">
           <div className="space-y-4 sm:space-y-6 opacity-0 animate-[fadeIn_0.7s_ease-out_0.2s_forwards] px-2">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-[1.1] sm:leading-tight tracking-tight">
-              Ready to Start Your Global Education Journey?
+              Ready to Build a Better Learning Routine?
             </h2>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/95 max-w-2xl mx-auto leading-relaxed font-light">
-              Join thousands of students and mentors on BridgeUp today and take the first step toward your international education goals.
+              Join EdConnect to connect with mentors, manage sessions, and generate study-ready notes from YouTube lectures.
             </p>
           </div>
           

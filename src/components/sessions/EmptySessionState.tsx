@@ -29,7 +29,7 @@ const EmptySessionState: React.FC = () => {
       </h2>
       
       <p className="text-gray-600 mb-8 max-w-md">
-        Start exploring mentors to book a session and get personalized guidance for your study abroad journey.
+        Start exploring mentors to book a session and get personalized guidance for your learning goals.
       </p>
       
       <Link to="/mentors">

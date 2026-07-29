@@ -276,7 +276,7 @@
       { icon: Users, label: "Active Mentors", value: totalMentors.toString(), color: "from-blue-500 to-blue-600" },
       {
         icon: MapPin,
-        label: "Countries",
+        label: "Expertise Areas",
         value: `${new Set(mentors.map((m) => m.countries)).size || 20}+`,
         color: "from-indigo-500 to-indigo-600",
       },

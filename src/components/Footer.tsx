@@ -12,10 +12,10 @@ const Footer = () => {
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-bridgeblue-500 flex items-center justify-center shadow-md">
                 <span className="font-bold text-white text-xs sm:text-sm">B</span>
               </div>
-              <span className="text-lg sm:text-xl font-bold text-gray-800 tracking-tight">BridgeUp</span>
+              <span className="text-lg sm:text-xl font-bold text-gray-800 tracking-tight">EdConnect</span>
             </div>
             <p className="text-gray-600 leading-relaxed text-xs sm:text-sm md:text-base max-w-sm">
-              Connecting students with mentors studying abroad for guidance, support, and success.
+              Connecting students with mentors, learning sessions, and AI-powered study notes.
             </p>
           </div>
           
@@ -140,7 +140,7 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-600 text-sm md:text-base order-2 md:order-1">
-            © 2025 BridgeUp. All rights reserved.
+            © 2025 EdConnect. All rights reserved.
           </p>
           
           <div className="flex space-x-5 order-1 md:order-2">

@@ -28,10 +28,10 @@ const Index = () => {
             <div className="w-full lg:w-1/2 space-y-6 sm:space-y-8 opacity-0 animate-[fadeIn_0.7s_ease-out_0.2s_forwards]">
               <div className="space-y-4 sm:space-y-6">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-[1.1] sm:leading-tight tracking-tight">
-                  Mentorship <span className="text-bridgeblue-500">Without</span> Borders
+                  Mentorship That <span className="text-bridgeblue-500">Moves</span> Learning Forward
                 </h1>
                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 max-w-2xl leading-relaxed font-light">
-                  Connect with experienced mentors who are studying abroad to get personalized guidance for your international education journey.
+                  Connect with expert mentors, manage learning sessions, and turn YouTube lectures into structured study notes with LearnAI.
                 </p>
               </div>
               
@@ -61,7 +61,7 @@ const Index = () => {
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white bg-gray-300 shadow-sm"></div>
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white bg-gray-400 shadow-sm"></div>
                 </div>
-                <span className="text-xs sm:text-sm md:text-base text-gray-600 font-medium">Join 500+ students & mentors</span>
+                <span className="text-xs sm:text-sm md:text-base text-gray-600 font-medium">Join 500+ learners and mentors</span>
               </div>
             </div>
             
@@ -85,11 +85,11 @@ const Index = () => {
             </div>
             <div className="text-center group py-4">
               <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-bridgeblue-500 mb-2 sm:mb-3 transition-transform duration-300 group-hover:scale-110">50+</div>
-              <p className="text-sm sm:text-base md:text-lg text-gray-600 font-medium">Universities</p>
+              <p className="text-sm sm:text-base md:text-lg text-gray-600 font-medium">Learning Paths</p>
             </div>
             <div className="text-center group py-4">
               <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-bridgeblue-500 mb-2 sm:mb-3 transition-transform duration-300 group-hover:scale-110">20+</div>
-              <p className="text-sm sm:text-base md:text-lg text-gray-600 font-medium">Countries</p>
+              <p className="text-sm sm:text-base md:text-lg text-gray-600 font-medium">Subject Areas</p>
             </div>
           </div>
         </div>

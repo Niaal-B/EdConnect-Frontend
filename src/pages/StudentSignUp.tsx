@@ -183,7 +183,7 @@ const StudentSignup = () => {
             Start Your Journey
           </h1>
           <p className="text-xl text-white/80 mb-8 leading-relaxed max-w-md">
-            Join thousands of students connecting with expert mentors to achieve their study abroad dreams.
+            Join students connecting with expert mentors to build skills, complete projects, and learn with confidence.
           </p>
           
           <div className="flex flex-wrap gap-3">
@@ -191,7 +191,7 @@ const StudentSignup = () => {
               🎓 Expert Guidance
             </div>
             <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-sm font-medium">
-              🌍 Global Network
+              📚 LearnAI Notes
             </div>
             <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-sm font-medium">
               🚀 Fast Track

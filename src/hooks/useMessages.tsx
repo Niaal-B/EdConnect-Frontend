@@ -51,7 +51,7 @@ export const useMessages = () => {
     if (currentMessageCount >= maxFreeMessages) {
       toast({
         title: "Message limit reached",
-        description: "You have reached the limit for free messages with this study abroad mentor. Upgrade for unlimited access.",
+        description: "You have reached the limit for free messages with this mentor. Upgrade for unlimited access.",
         variant: "destructive",
       });
       return;
@@ -70,7 +70,7 @@ export const useMessages = () => {
     setMessage("");
     toast({
       title: "Message sent",
-      description: "Your message has been sent to your study abroad mentor.",
+      description: "Your message has been sent to your mentor.",
     });
   };
   

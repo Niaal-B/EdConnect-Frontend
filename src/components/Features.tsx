@@ -1,28 +1,28 @@
 
 import { Card } from "@/components/ui/card";
-import { Globe, GraduationCap, FileText, Users } from "lucide-react";
+import { GraduationCap, FileText, Users, Video } from "lucide-react";
 
 const Features = () => {
   const features = [
     {
-      icon: Globe,
-      title: "Global Network",
-      description: "Connect with mentors from top universities around the world.",
+      icon: Users,
+      title: "Expert Mentor Network",
+      description: "Connect with mentors who can guide your academic and career growth.",
     },
     {
       icon: GraduationCap,
       title: "Personalized Guidance",
-      description: "Get customized advice for your academic journey from those who've been there.",
+      description: "Get focused advice based on your goals, interests, and current learning stage.",
+    },
+    {
+      icon: Video,
+      title: "LearnAI Notes",
+      description: "Convert YouTube lectures into structured study notes you can revise from.",
     },
     {
       icon: FileText,
-      title: "Application Support",
-      description: "Receive help with applications, essays, and interview preparation.",
-    },
-    {
-      icon: Users,
-      title: "Cultural Adaptation",
-      description: "Learn how to adapt to new cultures and environments abroad.",
+      title: "Session Support",
+      description: "Book sessions, chat with mentors, and keep your learning organized.",
     },
   ];
 
@@ -31,10 +31,10 @@ const Features = () => {
       <div className="container mx-auto px-4 sm:px-6 md:px-6 lg:px-8 max-w-7xl">
         <div className="text-center mb-10 sm:mb-12 md:mb-16 space-y-3 sm:space-y-4">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight px-2">
-            Why Choose BridgeUp
+            Why Choose EdConnect
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light px-4">
-            We connect ambitious students with experienced mentors to help navigate the journey of studying abroad.
+            A practical mentorship platform for students who want guidance, sessions, and AI-powered study support in one place.
           </p>
         </div>
 

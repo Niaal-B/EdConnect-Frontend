@@ -38,9 +38,9 @@ const mentorSessions = [
     },
     date: new Date(2025, 4, 15, 10, 0), // May 15, 2025, 10:00
     endTime: new Date(2025, 4, 15, 11, 0), // May 15, 2025, 11:00
-    topic: 'US University Applications',
+    topic: 'Project Architecture Review',
     status: 'upcoming',
-    notes: 'Review personal statement draft and discuss scholarship options',
+    notes: 'Review project workflow and discuss demo improvements',
     joinLink: 'https://meet.google.com/abc-defg-hij'
   },
   {
@@ -84,13 +84,13 @@ const mentorSessions = [
     },
     date: new Date(2025, 4, 5, 9, 0), // May 5, 2025, 9:00
     endTime: new Date(2025, 4, 5, 10, 0), // May 5, 2025, 10:00
-    topic: 'Scholarship Applications',
+    topic: 'Career Roadmap',
     status: 'completed',
     notes: 'Reviewed essay drafts and suggested improvements',
     joinLink: 'https://meet.google.com/abc-defg-hij',
     feedback: {
       rating: 5,
-      comment: "Excellent guidance on improving my scholarship essays. Already received my first offer!"
+      comment: "Excellent guidance on improving my project explanation. The final demo felt much clearer!"
     }
   },
   {

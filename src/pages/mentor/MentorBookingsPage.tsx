@@ -21,8 +21,8 @@ const bookingRequests = [
     },
     date: new Date(2025, 4, 15, 10, 0), // May 15, 2025, 10:00
     endTime: new Date(2025, 4, 15, 11, 0), // May 15, 2025, 11:00
-    topic: 'US University Applications',
-    message: "I'd like to discuss my application strategy for top US universities. I'm interested in Computer Science programs and want advice on strengthening my application."
+    topic: 'Project Architecture Review',
+    message: "I'd like to discuss my project strategy. I'm interested in Computer Science and want advice on strengthening my demo."
   },
   {
     id: 2,
@@ -30,12 +30,12 @@ const bookingRequests = [
       name: 'Miguel Santos',
       avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?&w=128&h=128&fit=crop&crop=face',
       country: 'Brazil',
-      university: 'Interested in Oxford University'
+      university: 'Interested in Full Stack Development'
     },
     date: new Date(2025, 4, 18, 16, 0), // May 18, 2025, 16:00
     endTime: new Date(2025, 4, 18, 17, 0), // May 18, 2025, 17:00
     topic: 'MBA Programs in UK',
-    message: "I'm applying to MBA programs in the UK and would appreciate guidance on scholarship opportunities and application timelines."
+    message: "I'm preparing a project presentation and would appreciate guidance on demo flow, architecture, and timelines."
   },
   {
     id: 3,
@@ -64,7 +64,7 @@ const confirmedBookings = [
     },
     date: new Date(2025, 4, 15, 10, 0), // May 15, 2025, 10:00
     endTime: new Date(2025, 4, 15, 11, 0), // May 15, 2025, 11:00
-    topic: 'US University Applications',
+    topic: 'Frontend Portfolio Review',
     status: 'upcoming'
   },
   {
@@ -73,11 +73,11 @@ const confirmedBookings = [
       name: 'Jamal Wilson',
       avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?&w=128&h=128&fit=crop&crop=face',
       country: 'United States',
-      university: 'Harvard University'
+      university: 'React Development'
     },
     date: new Date(2025, 4, 16, 15, 0), // May 16, 2025, 15:00
     endTime: new Date(2025, 4, 16, 16, 0), // May 16, 2025, 16:00
-    topic: 'Scholarship Strategy',
+    topic: 'Study Strategy',
     status: 'upcoming'
   },
   {
@@ -90,7 +90,7 @@ const confirmedBookings = [
     },
     date: new Date(2025, 4, 5, 9, 0), // May 5, 2025, 9:00
     endTime: new Date(2025, 4, 5, 10, 0), // May 5, 2025, 10:00
-    topic: 'Scholarship Applications',
+    topic: 'Career Roadmap',
     status: 'completed'
   },
   {
@@ -99,7 +99,7 @@ const confirmedBookings = [
       name: 'Elena Petrova',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?&w=128&h=128&fit=crop&crop=face',
       country: 'Russia',
-      university: 'Oxford University'
+      university: 'Product Design'
     },
     date: new Date(2025, 4, 2, 13, 0), // May 2, 2025, 13:00
     endTime: new Date(2025, 4, 2, 14, 0), // May 2, 2025, 14:00

@@ -305,26 +305,26 @@ const Profile = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="preferredCountries">Preferred Study Countries</Label>
+                  <Label htmlFor="preferredCountries">Preferred Learning Topics</Label>
                   <Input 
                     id="preferredCountries" 
                     value={Array.isArray(profile.preferred_countries) ? 
                       profile.preferred_countries.join(', ') : 
                       profile.preferred_countries}
                     onChange={(e) => handleInputChange('preferred_countries', e.target.value)}
-                    placeholder="Countries you want to study in..."
+                    placeholder="Topics or skills you want mentorship in..."
                     className="mt-1 rounded-xl" 
                   />
                 </div>
                 <div>
-                  <Label htmlFor="interestedUniversities">Interested Universities</Label>
+                  <Label htmlFor="interestedUniversities">Learning Goals</Label>
                   <Input 
                     id="interestedUniversities" 
                     value={Array.isArray(profile.interested_universities) ? 
                       profile.interested_universities.join(', ') : 
                       profile.interested_universities}
                     onChange={(e) => handleInputChange('interested_universities', e.target.value)}
-                    placeholder="Universities you're interested in..."
+                    placeholder="Goals you want to achieve..."
                     className="mt-1 rounded-xl" 
                   />
                 </div>

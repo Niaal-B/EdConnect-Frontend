@@ -4,15 +4,15 @@ import { Card } from "@/components/ui/card";
 const Testimonials = () => {
   const testimonials = [
     {
-      quote: "BridgeUp connected me with a mentor who helped me navigate the complex application process for Oxford. Their insights were invaluable!",
+      quote: "EdConnect helped me find a mentor who explained difficult topics clearly and kept me accountable with weekly sessions.",
       name: "Priya M.",
-      role: "Student, Oxford University",
+      role: "Computer Science Student",
       avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150&q=80",
     },
     {
-      quote: "As a mentor, I love helping students achieve their dreams of studying abroad. The platform makes it easy to connect and schedule sessions.",
+      quote: "The platform makes it simple to connect with students, schedule sessions, and support their learning progress.",
       name: "James K.",
-      role: "Mentor, Stanford University",
+      role: "Verified Mentor",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&h=150&q=80",
     },
   ];
@@ -25,7 +25,7 @@ const Testimonials = () => {
             Success Stories
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-light px-4">
-            Hear from students and mentors who've connected through BridgeUp
+            Hear from students and mentors who use EdConnect
           </p>
         </div>
 

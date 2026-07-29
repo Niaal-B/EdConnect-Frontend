@@ -582,22 +582,22 @@ const MentorProfile = () => {
             <CardHeader>
               <CardTitle>Specializations</CardTitle>
               <CardDescription>
-                Specify the countries and courses you specialize in
+                Specify the topics and courses you specialize in
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Countries Section */}
+              {/* Topics Section */}
               <div className="space-y-4">
                 <div>
-                  <Label>Countries</Label>
+                  <Label>Topics</Label>
                   <p className="text-xs text-gray-500 mb-2">
-                    Add countries you're qualified to mentor students from
+                    Add topics you're qualified to mentor students in
                   </p>
                   <div className="flex gap-2">
                     <Input
                       value={newCountry}
                       onChange={(e) => setNewCountry(e.target.value)}
-                      placeholder="e.g., US, UK, IN"
+                      placeholder="e.g., React, Django, AI"
                       onKeyDown={(e) => e.key === 'Enter' && handleAddCountry()}
                     />
                     <Button 

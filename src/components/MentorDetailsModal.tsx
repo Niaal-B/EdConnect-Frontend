@@ -119,12 +119,12 @@ import {
               </div>
             )}
   
-            {/* Countries */}
+            {/* Topics */}
             {mentor.countries && mentor.countries.length > 0 && (
               <div className="space-y-2">
                 <h4 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                   <Globe className="h-5 w-5" />
-                  Countries
+                  Topics
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {mentor.countries.map((country, idx) => (

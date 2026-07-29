@@ -175,7 +175,7 @@ const MentorLogin = () => {
             <span className="text-white/90">Mentor!</span>
           </h1>
           <p className="text-xl text-white/80 mb-8 leading-relaxed max-w-md">
-            Share your expertise and help students achieve their dreams of studying abroad.
+            Share your expertise and help students build skills, finish projects, and learn with confidence.
           </p>
           
           {/* Feature Pills */}

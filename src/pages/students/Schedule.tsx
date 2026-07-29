@@ -744,7 +744,7 @@ const Schedule = () => {
           {booking.mentor_profile_info.countries.length > 0 && (
             <div className="mt-4 pt-4 border-t border-gray-100">
               <div className="flex flex-wrap gap-2">
-                <span className="text-sm text-gray-600">Countries:</span>
+                <span className="text-sm text-gray-600">Topics:</span>
                 {booking.mentor_profile_info.countries.map((country, idx) => (
                   <Badge key={idx} variant="outline" className="text-xs">
                     {country}

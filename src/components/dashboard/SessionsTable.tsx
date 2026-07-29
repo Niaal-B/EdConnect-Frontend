@@ -24,7 +24,7 @@ export const SessionsTable = () => {
       avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?&w=128&h=128&fit=crop&crop=face",
       date: "May 2, 2025",
       time: "10:00 - 11:00",
-      topic: "US University Applications",
+      topic: "Project Architecture",
       status: "Confirmed"
     },
     {
@@ -33,7 +33,7 @@ export const SessionsTable = () => {
       avatar: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?&w=128&h=128&fit=crop&crop=face",
       date: "May 4, 2025",
       time: "14:00 - 15:00",
-      topic: "Scholarship Strategy",
+      topic: "Study Strategy",
       status: "Pending"
     },
     {

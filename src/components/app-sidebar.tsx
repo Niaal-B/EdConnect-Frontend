@@ -1,6 +1,6 @@
 import { 
   Globe, MessageSquare, Calendar, Search, 
-  GraduationCap, FileText, Settings, Bell 
+  GraduationCap, Sparkles, Settings
 } from "lucide-react";
 
 import {
@@ -25,6 +25,7 @@ const menuItems = [
   { title: "Schedule", icon: Calendar, path: "/student/schedule" },
   { title: "Discover", icon: Search, path: "/student/discover" },
   { title: "My-Mentors", icon: GraduationCap, path: "/student/my-mentors" },
+  { title: "LearnAI", icon: Sparkles, path: "/student/learn-ai" },
   { title: "Settings", icon: Settings, path: "/student/settings" },
 ];
 

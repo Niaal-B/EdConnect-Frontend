@@ -30,6 +30,7 @@ import Messages from '@/pages/students/Messages';
 import MentorMessages from '@/pages/mentor/MentorMessages';
 import BookingSuccessPage from '@/pages/students/BookingSuccessPage';
 import Schedule from '@/pages/students/Schedule';
+import LearnAI from '@/pages/students/LearnAI';
 import MentorSessions from '@/pages/mentor/MentorSessions';
 import MentorEarnings from '@/pages/mentor/MentorEarningsPage';
 import SessionPage from '@/pages/SessionPage';
@@ -73,6 +74,7 @@ const router = createBrowserRouter([
       { path: 'my-mentors', element: <PrivateRoute role='student'><MyMentors /></PrivateRoute> },
       { path: 'messages', element: <PrivateRoute role='student'><Messages /></PrivateRoute> },
       { path: 'schedule', element: <PrivateRoute role='student'><Schedule /></PrivateRoute> },
+      { path: 'learn-ai', element: <PrivateRoute role='student'><LearnAI /></PrivateRoute> },
       { path: 'settings', element: <PrivateRoute role='student'><Settings /></PrivateRoute> },
     ]
   },

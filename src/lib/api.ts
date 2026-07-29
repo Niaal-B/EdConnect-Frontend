@@ -351,4 +351,29 @@ export const uploadProfilePicture = async (formData: FormData) => {
   return response.data;
 };
 
+export interface LearnAISummary {
+  id: number;
+  youtube_url: string;
+  video_id: string;
+  video_title: string;
+  summary: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export const learnAIApi = {
+  generateNotes: (youtubeUrl: string) =>
+    api.post<LearnAISummary>("learn-ai/generate/", {
+      youtube_url: youtubeUrl,
+    }),
+
+  getHistory: () => api.get<LearnAISummary[]>("learn-ai/history/"),
+
+  getSummary: (summaryId: number) =>
+    api.get<LearnAISummary>(`learn-ai/${summaryId}/`),
+
+  deleteSummary: (summaryId: number) =>
+    api.delete(`learn-ai/${summaryId}/`),
+};
+
 export default api;

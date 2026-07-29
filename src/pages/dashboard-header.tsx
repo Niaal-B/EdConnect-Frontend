@@ -10,7 +10,7 @@ export function DashboardHeader() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-1">Hey...👋</h1>
-          <p className="text-gray-600">Let's continue your study abroad journey</p>
+          <p className="text-gray-600">Let's continue your learning journey</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="relative w-80">

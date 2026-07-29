@@ -13,13 +13,13 @@ const HowItWorks = () => {
     {
       number: "02",
       title: "Find Matches",
-      description: "Browse mentors based on your target universities and goals.",
+      description: "Browse mentors based on your subjects, goals, and preferred guidance style.",
       color: "bg-bridgeblue-100",
     },
     {
       number: "03",
-      title: "Connect",
-      description: "Schedule sessions and start your mentorship journey.",
+      title: "Learn and Revise",
+      description: "Schedule sessions, chat with mentors, and use LearnAI to create notes from lectures.",
       color: "bg-bridgeblue-200",
     },
   ];

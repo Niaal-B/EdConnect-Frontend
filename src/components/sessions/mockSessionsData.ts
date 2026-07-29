@@ -31,7 +31,7 @@ export const mockSessions: Session[] = [
     time: "3:30 PM",
     duration: "45 minutes",
     status: "upcoming",
-    topic: "Scholarship Opportunities"
+    topic: "Career Roadmap"
   },
   {
     id: "3",
@@ -43,7 +43,7 @@ export const mockSessions: Session[] = [
     time: "2:00 PM",
     duration: "60 minutes",
     status: "completed",
-    topic: "UK University Culture",
+    topic: "Project Presentation",
     notes: "Provided great insights on UK university application timeline"
   },
   {

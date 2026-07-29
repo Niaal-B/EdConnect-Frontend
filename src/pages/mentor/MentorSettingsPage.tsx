@@ -95,14 +95,14 @@ const MentorSettingsPage: React.FC = () => {
                     <Input id="lastName" defaultValue="Johnson" />
                   </div>
                   
-                  {/* Title and University */}
+                  {/* Title and organization */}
                   <div className="space-y-2">
                     <Label htmlFor="title">Professional Title</Label>
                     <Input id="title" defaultValue="Assistant Professor" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="university">Current University/Institution</Label>
-                    <Input id="university" defaultValue="Stanford University" />
+                    <Label htmlFor="university">Current Organization/Institution</Label>
+                    <Input id="university" defaultValue="EdTech Labs" />
                   </div>
                   
                   {/* Location */}
@@ -141,7 +141,7 @@ const MentorSettingsPage: React.FC = () => {
                     <Textarea 
                       id="bio" 
                       rows={5} 
-                      defaultValue="Dr. Emily Johnson is an Assistant Professor at Stanford University with over 10 years of experience in higher education. She specializes in guiding students through the application process for top-tier universities in the US and UK, with a focus on STEM fields. Dr. Johnson has helped hundreds of students secure admissions and scholarships to prestigious institutions."
+                      defaultValue="Dr. Emily Johnson is a senior mentor with over 10 years of experience in education and project guidance. She specializes in helping students understand technical concepts, structure projects, and prepare confident presentations."
                     />
                     <p className="text-sm text-gray-500">Write a compelling bio that highlights your expertise and experience as a mentor.</p>
                   </div>
@@ -195,7 +195,7 @@ const MentorSettingsPage: React.FC = () => {
                       <div className="flex justify-between">
                         <div>
                           <h4 className="font-medium">Ph.D. in Educational Psychology</h4>
-                          <p className="text-sm text-gray-600">Harvard University</p>
+                          <p className="text-sm text-gray-600">Product Design Program</p>
                           <p className="text-sm text-gray-500">2010 - 2014</p>
                         </div>
                         <div className="flex space-x-2">
@@ -209,7 +209,7 @@ const MentorSettingsPage: React.FC = () => {
                       <div className="flex justify-between">
                         <div>
                           <h4 className="font-medium">M.A. in Higher Education</h4>
-                          <p className="text-sm text-gray-600">Columbia University</p>
+                          <p className="text-sm text-gray-600">Backend Development Program</p>
                           <p className="text-sm text-gray-500">2008 - 2010</p>
                         </div>
                         <div className="flex space-x-2">
@@ -223,7 +223,7 @@ const MentorSettingsPage: React.FC = () => {
                       <div className="flex justify-between">
                         <div>
                           <h4 className="font-medium">B.A. in Psychology</h4>
-                          <p className="text-sm text-gray-600">Yale University</p>
+                          <p className="text-sm text-gray-600">AI Tools Program</p>
                           <p className="text-sm text-gray-500">2004 - 2008</p>
                         </div>
                         <div className="flex space-x-2">
@@ -251,7 +251,7 @@ const MentorSettingsPage: React.FC = () => {
                       <div className="flex justify-between">
                         <div>
                           <h4 className="font-medium">Assistant Professor</h4>
-                          <p className="text-sm text-gray-600">Stanford University</p>
+                          <p className="text-sm text-gray-600">Software Engineering Program</p>
                           <p className="text-sm text-gray-500">2018 - Present</p>
                         </div>
                         <div className="flex space-x-2">
@@ -265,7 +265,7 @@ const MentorSettingsPage: React.FC = () => {
                       <div className="flex justify-between">
                         <div>
                           <h4 className="font-medium">Admissions Counselor</h4>
-                          <p className="text-sm text-gray-600">Princeton University</p>
+                          <p className="text-sm text-gray-600">Mentorship Program</p>
                           <p className="text-sm text-gray-500">2014 - 2018</p>
                         </div>
                         <div className="flex space-x-2">
@@ -344,19 +344,19 @@ const MentorSettingsPage: React.FC = () => {
                   <div className="space-y-3">
                     <div className="flex flex-wrap gap-2">
                       <Badge variant="outline" className="py-1.5 bg-blue-50 text-blue-800 border-blue-200">
-                        US University Admissions <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-blue-100"><Trash2 className="h-3 w-3" /></Button>
+                        Project Architecture <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-blue-100"><Trash2 className="h-3 w-3" /></Button>
                       </Badge>
                       <Badge variant="outline" className="py-1.5 bg-blue-50 text-blue-800 border-blue-200">
-                        UK University Admissions <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-blue-100"><Trash2 className="h-3 w-3" /></Button>
+                        Frontend Development <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-blue-100"><Trash2 className="h-3 w-3" /></Button>
                       </Badge>
                       <Badge variant="outline" className="py-1.5 bg-blue-50 text-blue-800 border-blue-200">
-                        Scholarship Applications <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-blue-100"><Trash2 className="h-3 w-3" /></Button>
+                        Study Planning <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-blue-100"><Trash2 className="h-3 w-3" /></Button>
                       </Badge>
                       <Badge variant="outline" className="py-1.5 bg-blue-50 text-blue-800 border-blue-200">
                         STEM Programs <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-blue-100"><Trash2 className="h-3 w-3" /></Button>
                       </Badge>
                       <Badge variant="outline" className="py-1.5 bg-blue-50 text-blue-800 border-blue-200">
-                        Medical School Applications <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-blue-100"><Trash2 className="h-3 w-3" /></Button>
+                        Presentation Coaching <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-blue-100"><Trash2 className="h-3 w-3" /></Button>
                       </Badge>
                     </div>
                     <div className="flex space-x-2">
@@ -367,23 +367,23 @@ const MentorSettingsPage: React.FC = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="universities">Universities/Programs</Label>
+                  <Label htmlFor="universities">Courses/Programs</Label>
                   <div className="space-y-3">
                     <div className="flex flex-wrap gap-2">
                       <Badge variant="outline" className="py-1.5 bg-green-50 text-green-800 border-green-200">
-                        Stanford University <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-green-100"><Trash2 className="h-3 w-3" /></Button>
+                        React Development <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-green-100"><Trash2 className="h-3 w-3" /></Button>
                       </Badge>
                       <Badge variant="outline" className="py-1.5 bg-green-50 text-green-800 border-green-200">
-                        Harvard University <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-green-100"><Trash2 className="h-3 w-3" /></Button>
+                        Django REST API <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-green-100"><Trash2 className="h-3 w-3" /></Button>
                       </Badge>
                       <Badge variant="outline" className="py-1.5 bg-green-50 text-green-800 border-green-200">
                         MIT <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-green-100"><Trash2 className="h-3 w-3" /></Button>
                       </Badge>
                       <Badge variant="outline" className="py-1.5 bg-green-50 text-green-800 border-green-200">
-                        Oxford University <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-green-100"><Trash2 className="h-3 w-3" /></Button>
+                        Database Design <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-green-100"><Trash2 className="h-3 w-3" /></Button>
                       </Badge>
                       <Badge variant="outline" className="py-1.5 bg-green-50 text-green-800 border-green-200">
-                        Cambridge University <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-green-100"><Trash2 className="h-3 w-3" /></Button>
+                        AI Study Tools <Button variant="ghost" size="icon" className="h-4 w-4 ml-1 hover:bg-green-100"><Trash2 className="h-3 w-3" /></Button>
                       </Badge>
                     </div>
                     <div className="flex space-x-2">
@@ -436,8 +436,8 @@ const MentorSettingsPage: React.FC = () => {
                       <div className="border rounded-lg p-4">
                         <div className="flex justify-between">
                           <div>
-                            <h4 className="font-medium">Scholarship Applications</h4>
-                            <p className="text-sm text-gray-500">Guidance on finding and applying for scholarships</p>
+                            <h4 className="font-medium">Project Guidance</h4>
+                            <p className="text-sm text-gray-500">Guidance on planning, building, and presenting projects</p>
                           </div>
                           <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600">
                             <Trash2 className="h-4 w-4" />
