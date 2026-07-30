@@ -50,10 +50,10 @@ type AdminLoginFormValues = z.infer<typeof adminLoginSchema>;
 
 const AdminLoginForm = () => {
   const dispatch = useDispatch();
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { checking } = useAuthVerification();
+  const { checking, user } = useAuthVerification();
 
   useEffect(() => {
     if (!checking) {
